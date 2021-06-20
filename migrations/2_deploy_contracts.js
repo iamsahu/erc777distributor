@@ -20,14 +20,8 @@ module.exports = async function (callback) {
 
 		const app = await web3tx(
 			DividendRightsToken.new,
-			"Deploy DividendRightsToken"
-		)(
-			"Dividend Rights Token",
-			"DRT",
-			sf.tokens.fDAIx.address,
-			sf.host.address,
-			sf.agreements.ida.address
-		);
+			"Deploy ERC777Distributor"
+		)(sf.tokens.fDAIx.address, sf.host.address, sf.agreements.ida.address);
 		console.log("App deployed at", app.address);
 		callback();
 	} catch (err) {

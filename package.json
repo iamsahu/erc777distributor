@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@decentral.ee/web3-helpers": "^0.5.3",
     "@superfluid-finance/ethereum-contracts": "^1.0.0-rc.4"
   }
 }

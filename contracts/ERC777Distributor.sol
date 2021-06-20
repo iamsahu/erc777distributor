@@ -163,7 +163,7 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
     }
 
     /// @dev Distribute `amount` of cash among all token holders
-    function distribute(uint256 cashAmount) internal onlyOwner {
+    function distribute(uint256 cashAmount) internal {
         (uint256 actualCashAmount,) = _ida.calculateDistribution(
             _cashToken,
             address(this), INDEX_ID,
@@ -194,7 +194,7 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
 
         // do stuff
         totalDontaions += amount;
-        distribute(amount);
+        distribute(amount);//TO DO: How will this workout?? We need to figure out whether a fees needs to be paid for distribute function & how would it be paid?
         emit DonationReceived( from, "tokenName", amount);
     }   
 
