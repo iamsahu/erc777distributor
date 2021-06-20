@@ -169,8 +169,6 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
             address(this), INDEX_ID,
             cashAmount);
 
-        //_cashToken.transferFrom(owner(), address(this), actualCashAmount);
-
         _host.callAgreement(
             _ida,
             abi.encodeWithSelector(
