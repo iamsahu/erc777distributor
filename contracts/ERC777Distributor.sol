@@ -19,8 +19,8 @@ import "@openzeppelin/contracts/token/ERC777/IERC777Recipient.sol";
 
 contract ERC777Distributor is IERC777Recipient,SuperAppBase {
 
-    uint256 totalDonations;
-    uint128 totalShareUnits;
+    uint256 totalDonations=0;
+    uint128 totalShareUnits=100;
     mapping (address=>uint128) shareMapping;
 
     uint32 public constant INDEX_ID = 0;
@@ -49,7 +49,7 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
         ISuperToken cashToken,
         ISuperfluid host,
         IInstantDistributionAgreementV1 ida) public {
-        
+        owner = msg.sender;
         _erc1820.setInterfaceImplementer(address(this), TOKENS_RECIPIENT_INTERFACE_HASH, address(this));
 
         _cashToken = cashToken;
@@ -245,8 +245,8 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
 
         // do stuff
         totalDonations += amount;
-        distribute(amount);//TO DO: How will this workout?? We need to figure out whether a fees needs to be paid for distribute function & how would it be paid?
-        emit DonationReceived( from, "tokenName", amount,INDEX_ID,address(_cashToken),address(this));
+        distribute(amount);
+        emit DonationReceived( from, "fDAIz", amount,INDEX_ID,address(_cashToken),address(this));
     }   
 
 }
