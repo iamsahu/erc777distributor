@@ -187,6 +187,7 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
     }
 
     function addUser(address newUser,uint128 sharePercentage) external onlyOwner{
+        require(shareMapping[newUser]==0,'User exists');
         uint128 shareUnits = (sharePercentage * totalShareUnits)/(100- sharePercentage);
         modifySub(newUser, shareUnits);
         totalShareUnits += shareUnits;
@@ -195,7 +196,7 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
     }
 
     function modifyUser(address existingUser,uint128 sharePercentage) external onlyOwner{
-        
+        require(shareMapping[existingUser]!=0,"User doesn't exist");
         uint128 shareUnits = (sharePercentage * (totalShareUnits-shareMapping[existingUser]))/(100- sharePercentage);
         modifySub(existingUser, shareUnits);
         totalShareUnits += shareUnits - shareMapping[existingUser];
@@ -203,13 +204,13 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
         emit UserModified(existingUser,shareUnits,INDEX_ID,address(_cashToken),address(this));
     }
 
-    function removeUser(address newUser) external onlyOwner{
-        
-        totalShareUnits -= shareMapping[newUser];
-        uint128 temp = shareMapping[newUser];
-        shareMapping[newUser] = 0;
-        modifySub(newUser, 0);
-        emit UserRemoved(newUser,temp,INDEX_ID,address(_cashToken),address(this));
+    function removeUser(address existingUser) external onlyOwner{
+        require(shareMapping[existingUser]!=0,"User doesn't exist");
+        totalShareUnits -= shareMapping[existingUser];
+        uint128 temp = shareMapping[existingUser];
+        shareMapping[existingUser] = 0;
+        modifySub(existingUser, 0);
+        emit UserRemoved(existingUser,temp,INDEX_ID,address(_cashToken),address(this));
     }
 
     /// @dev Distribute `amount` of cash among all token holders
