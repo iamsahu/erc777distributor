@@ -1,7 +1,11 @@
 const { web3tx } = require("@decentral.ee/web3-helpers");
-const { setWeb3Provider } = require("@decentral.ee/web3-helpers/src/config");
+// const { setWeb3Provider } = require("@decentral.ee/web3-helpers/src/config");
+const {
+	getWeb3,
+	setWeb3Provider,
+} = require("@openzeppelin/test-helpers/src/config/web3");
 const SuperfluidSDK = require("@superfluid-finance/js-sdk");
-const DividendRightsToken = artifacts.require("ERC777Distributor");
+const ERC777Distributor = artifacts.require("ERC777Distributor");
 
 module.exports = async function (callback) {
 	try {
@@ -18,13 +22,15 @@ module.exports = async function (callback) {
 		});
 		await sf.initialize();
 
-		const app = await web3tx(
-			DividendRightsToken.new,
-			"Deploy ERC777Distributor"
-		)(sf.tokens.fDAIx.address, sf.host.address, sf.agreements.ida.address);
+		const app = await web3tx(ERC777Distributor.new, "Deploy ERC777Distributor")(
+			sf.tokens.fDAIx.address,
+			sf.host.address,
+			sf.agreements.ida.address
+		);
 		console.log("App deployed at", app.address);
-		callback();
+		// console.log(callback);
 	} catch (err) {
+		// console.log(err);
 		callback(err);
 	}
 };

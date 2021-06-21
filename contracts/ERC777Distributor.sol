@@ -19,7 +19,9 @@ import "@openzeppelin/contracts/token/ERC777/IERC777Recipient.sol";
 
 contract ERC777Distributor is IERC777Recipient,SuperAppBase {
 
-    uint256 totalDontaions;
+    uint256 totalDonations;
+    uint128 totalShareUnits;
+    mapping (address=>uint128) shareMapping;
 
     uint32 public constant INDEX_ID = 0;
 
@@ -35,7 +37,13 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
     // use callbacks to track approved subscriptions
     mapping (address => bool) public isSubscribing;
 
-    event DonationReceived(address from, string token, uint256 amount);
+    //Events
+    event DonationReceived(address from, string token, uint256 amount,uint32 index,address tokenAddress,address publisher);
+    event UserAdded(address userAddress,uint128 shares,uint32 index,address tokenAddress,address publisher);
+    event UserRemoved(address userAddress,uint128 shares,uint32 index,address tokenAddress,address publisher);
+    event UserModified(address userAddress,uint128 shares,uint32 index,address tokenAddress,address publisher);
+    event Distribution(uint256 amountDistributed,uint32 index,address tokenAddress,address publisher);
+    event TotalShares(uint128 totalShares,uint32 index,address tokenAddress,address publisher);
 
     constructor (
         ISuperToken cashToken,
@@ -162,6 +170,48 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
         }
     }
 
+    function modifySub(address newUser,uint128 shareUnits) internal{
+        _host.callAgreement(
+            _ida,
+            abi.encodeWithSelector(
+                _ida.updateSubscription.selector,
+                _cashToken,
+                INDEX_ID,
+                newUser,
+                shareUnits,
+                new bytes(0) // placeholder ctx
+            ),
+            new bytes(0) // user data
+        );
+        shareMapping[newUser] = shareUnits;
+    }
+
+    function addUser(address newUser,uint128 sharePercentage) external onlyOwner{
+        uint128 shareUnits = (sharePercentage * totalShareUnits)/(100- sharePercentage);
+        modifySub(newUser, shareUnits);
+        totalShareUnits += shareUnits;
+        shareMapping[newUser] = shareUnits;
+        emit UserAdded(newUser,shareUnits,INDEX_ID,address(_cashToken),address(this));
+    }
+
+    function modifyUser(address existingUser,uint128 sharePercentage) external onlyOwner{
+        
+        uint128 shareUnits = (sharePercentage * (totalShareUnits-shareMapping[existingUser]))/(100- sharePercentage);
+        modifySub(existingUser, shareUnits);
+        totalShareUnits += shareUnits - shareMapping[existingUser];
+        shareMapping[existingUser] = shareUnits;
+        emit UserModified(existingUser,shareUnits,INDEX_ID,address(_cashToken),address(this));
+    }
+
+    function removeUser(address newUser) external onlyOwner{
+        
+        totalShareUnits -= shareMapping[newUser];
+        uint128 temp = shareMapping[newUser];
+        shareMapping[newUser] = 0;
+        modifySub(newUser, 0);
+        emit UserRemoved(newUser,temp,INDEX_ID,address(_cashToken),address(this));
+    }
+
     /// @dev Distribute `amount` of cash among all token holders
     function distribute(uint256 cashAmount) internal {
         (uint256 actualCashAmount,) = _ida.calculateDistribution(
@@ -180,6 +230,7 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
             ),
             new bytes(0) // user data
         );
+        emit Distribution(cashAmount,INDEX_ID,address(_cashToken),address(this));
     }
 
     function tokensReceived(
@@ -193,9 +244,9 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
         //require(msg.sender == address(_token), "Simple777Recipient: Invalid token");
 
         // do stuff
-        totalDontaions += amount;
+        totalDonations += amount;
         distribute(amount);//TO DO: How will this workout?? We need to figure out whether a fees needs to be paid for distribute function & how would it be paid?
-        emit DonationReceived( from, "tokenName", amount);
+        emit DonationReceived( from, "tokenName", amount,INDEX_ID,address(_cashToken),address(this));
     }   
 
 }

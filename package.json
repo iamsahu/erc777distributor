@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "@decentral.ee/web3-helpers": "^0.5.3",
-    "@superfluid-finance/ethereum-contracts": "^1.0.0-rc.4"
+    "@openzeppelin/test-helpers": "^0.5.11",
+    "@superfluid-finance/ethereum-contracts": "^1.0.0-rc.4",
+    "@truffle/contract": "^4.3.21"
   }
 }
