@@ -1,73 +1,307 @@
-import React, { Component } from "react";
-import SimpleStorageContract from "./contracts/SimpleStorage.json";
+import React, { useState, useEffect, useRef } from "react";
+import { useWeb3React } from "@web3-react/core";
+import { injected } from "./helpers/connector";
 import getWeb3 from "./getWeb3";
-
+import Web3 from "web3";
+import Dashboard from "./pages/Dashboard";
+import ManageSubscribers from "./pages/ManageSubscribers";
+import DonationsTimeline from "./pages/DonationsTimeline";
+import Web3Context from "./context/Web3Context";
+import ERC777Distributor from "./contracts/ERC777Distributor.json";
 import "./App.css";
 
-class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+import { Layout, Menu, Button } from "antd";
+import {
+	AreaChartOutlined,
+	DatabaseOutlined,
+	FieldTimeOutlined,
+} from "@ant-design/icons";
+import { Typography } from "antd";
 
-  componentDidMount = async () => {
-    try {
-      // Get network provider and web3 instance.
-      const web3 = await getWeb3();
+const { Link, Title } = Typography;
+const { Header, Content, Footer, Sider } = Layout;
+const { SubMenu } = Menu;
 
-      // Use web3 to get the user's accounts.
-      const accounts = await web3.eth.getAccounts();
+function App() {
+	const web3React = useWeb3React();
+	const [collapsed, setCollapsed] = useState(true);
+	const [currentUI, setcurrentUI] = useState(<Dashboard />);
+	// console.log(web3React);
 
-      // Get the contract instance.
-      const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
-      const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
-        deployedNetwork && deployedNetwork.address,
-      );
+	const [metaMask, setMetaMask] = useState("");
+	const details = useRef({
+		web3: null,
+		accounts: [],
+		ethereum: null,
+		chainid: 0,
+	});
 
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
-    } catch (error) {
-      // Catch any errors for any of the above operations.
-      alert(
-        `Failed to load web3, accounts, or contract. Check console for details.`,
-      );
-      console.error(error);
-    }
-  };
+	const onError = (err) => {
+		console.error(err);
+		// debugger;
+	};
 
-  runExample = async () => {
-    const { accounts, contract } = this.state;
+	const activateWeb3 = () => {
+		web3React.activate(injected, onError, true).catch((err) => {
+			console.error(err);
+			// debugger;
+		});
+	};
 
-    // Stores a given value, 5 by default.
-    await contract.methods.set(5).send({ from: accounts[0] });
+	useEffect(() => {
+		if (typeof web3React.connector != "undefined")
+			web3React.connector.getProvider().then((provider) => {
+				// Instantiate web3.js
+				// console.log(provider);
+				const web3 = new Web3(provider);
+				// console.log("web3 found");
+				// console.log(web3);
+        // const networkId = await web3.eth.net.getId();
+				details.current.web3 = web3;
+        // details.current.networkId = networkId;
+				setMetaMask("GotWeb3");
+				provider.on("chainChanged", handleChainChanged);
+				provider.on("accountsChanged", handleAccountsChanged);
+				provider.on("close", handleClose);
+				provider.on("networkChanged", handleNetworkChanged);
+			});
+	}, [web3React.active, web3React.connector]);
 
-    // Get the value from the contract to prove it worked.
-    const response = await contract.methods.get().call();
+	useEffect(() => {
+		if (details.current.web3 === null) {
+			return;
+		}
+		const networkId = details.current.chainid;
+    console.log(networkId);
+		const cc = ERC777Distributor.networks[networkId];
+    console.log(cc)
+		const local1nstance = new details.current.web3.eth.Contract(
+			ERC777Distributor.abi,
+			cc.address
+		);
+		details.current.mainContract = local1nstance;
+		details.current.web3.eth.getAccounts((err, accounts) => {
+			if (err) {
+				debugger;
+				console.error(err);
+			} else {
+				if (accounts.length > 0) {
+					details.current.accounts = accounts[0];
+					setMetaMask("Set");
+				}
+			}
+		});
+	}, [details.current.web3]);
 
-    // Update state with the result.
-    this.setState({ storageValue: response });
-  };
+	useEffect(() => {
+		async function setup() {
+			const web3 = await getWeb3();
+			console.log("web3 found");
+			details.current.web3 = web3;
+			details.current.chainid = parseInt(await web3.eth.getChainId());
+			setMetaMask("GotWeb3");
+			await web3.eth.getAccounts((error, accounts) => {
+				details.current.accounts = accounts;
+				console.log(accounts);
+				if (accounts.length > 0) {
+					setMetaMask("Set");
+					console.log("Set in accounts");
+					web3React.activate(injected, onError, true).catch((err) => {
+						console.error(err);
+						debugger;
+					});
+				}
+			});
+		}
+		setup();
+	}, []);
 
-  render() {
-    if (!this.state.web3) {
-      return <div>Loading Web3, accounts, and contract...</div>;
-    }
-    return (
-      <div className="App">
-        <h1>Good to Go!</h1>
-        <p>Your Truffle Box is installed and ready.</p>
-        <h2>Smart Contract Example</h2>
-        <p>
-          If your contracts compiled and migrated successfully, below will show
-          a stored value of 5 (by default).
-        </p>
-        <p>
-          Try changing the value stored on <strong>line 42</strong> of App.js.
-        </p>
-        <div>The stored value is: {this.state.storageValue}</div>
-      </div>
-    );
-  }
+	//TO DO: Handling the following
+
+	function handleChainChanged(chainId) {
+		details.current.chainid = chainId;
+		window.location.reload();
+		activateWeb3();
+	}
+	function handleAccountsChanged(accounts) {
+		if (accounts.length > 0) {
+			details.current.accounts = accounts;
+		} else {
+			details.current.accounts = accounts;
+			setMetaMask("");
+		}
+	}
+	function handleClose() {
+		setMetaMask("");
+	}
+	function handleNetworkChanged() {}
+
+	async function ConnectWallet() {
+		activateWeb3();
+		// try {
+		// 	details.current.ethereum
+		// 		.request({ method: "eth_requestAccounts" })
+		// 		.then((accounts) => {
+		// 			details.current.accounts = accounts;
+		// 			setMetaMask("Set");
+		// 		})
+		// 		.catch((error) => console.log("Error"));
+		// } catch (error) {
+		// 	console.log(error);
+		// }
+	}
+
+	async function loadContract(contract) {
+		// Load a deployed contract instance into a web3 contract object
+
+		// Get the address of the most recent deployment from the deployment map
+		const deployedNetwork = contract.networks[details.current.chainid];
+		// console.log(deployedNetwork.address);
+		// const instance = new web3.eth.Contract(
+		//   contract.abi,
+		//   deployedNetwork && deployedNetwork.address
+		// );
+
+		// return instance;
+
+		// let address;
+		// try {
+		// 	address = map[chain][contractName][0];
+		// } catch (e) {
+		// 	console.log(
+		// 		`Couldn't find any deployed contract "${contractName}" on the chain "${chain}".`
+		// 	);
+		// 	return undefined;
+		// }
+		// // console.log("Address " + address);
+		// // Load the artifact with the specified address
+		// let contractArtifact;
+		// try {
+		// 	contractArtifact = await import(
+		// 		`./artifacts/deployments/${chain}/${address}.json`
+		// 	);
+		// } catch (e) {
+		// 	console.log(
+		// 		`Failed to load contract artifact "./artifacts/deployments/${chain}/${address}.json"`
+		// 	);
+		// 	return undefined;
+		// }
+
+		return new details.current.web3.eth.Contract(
+			contract.abi,
+			deployedNetwork.address
+		);
+	}
+
+	function onCollapse(collapse) {
+		// setCollapsed(collapse);
+	}
+
+	function onItemClick(item) {
+		// console.log(item);
+		switch (item.key) {
+			case "1":
+				setcurrentUI(<Dashboard />);
+				break;
+			case "2":
+				setcurrentUI(<ManageSubscribers />);
+				break;
+			case "3":
+				setcurrentUI(<DonationsTimeline />);
+				break;
+			case "4":
+				// setcurrentUI(<Borrow />);
+				break;
+			case "5":
+				//Set Aave
+				// setcurrentUI(<Aave />);
+				break;
+			default:
+				break;
+		}
+	}
+	// async function GetBalance() {
+	// 	const advisory = await loadContract("dev", "AdvisoryToken");
+	// 	const val = await advisory.methods.totalSupply().call();
+	// 	console.log(details.current.web3.utils.fromWei(val));
+	// }
+
+	// async function MintExtra() {
+	// 	const advisory = await loadContract("dev", "AdvisoryToken");
+	// 	const val = await advisory.methods
+	// 		.mint()
+	// 		.send({ from: details.current.accounts[0], gasLimit: 210000 });
+	// 	console.log(val);
+	// }
+
+	return (
+		<Layout>
+			<Header
+				className="header"
+				style={{ position: "fixed", zIndex: 1, width: "100%" }}
+			>
+				{metaMask !== "Set" && (
+					<Button type="primary" onClick={ConnectWallet}>
+						Connect Wallet
+					</Button>
+				)}
+			</Header>
+			<Content className="site-layout" style={{ marginTop: 64 }}>
+				<Web3Context.Provider value={details}>
+					<Layout style={{ minHeight: "92vh" }}>
+						<Sider collapsible collapsed={collapsed} onCollapse={onCollapse}>
+							<div className="logo" />
+							<Menu theme="light" defaultSelectedKeys={["1"]} mode="inline">
+								<Menu.Item
+									key="1"
+									icon={<AreaChartOutlined />}
+									onClick={onItemClick}
+								>
+									Dashboard
+								</Menu.Item>
+								<Menu.Item
+									key="2"
+									icon={<DatabaseOutlined />}
+									onClick={onItemClick}
+								>
+									Manage
+								</Menu.Item>
+								<Menu.Item
+									key="3"
+									icon={<FieldTimeOutlined />}
+									onClick={onItemClick}
+								>
+									Timeline
+								</Menu.Item>
+							</Menu>
+						</Sider>
+						<Layout className="site-layout">
+							<Content>
+								<div
+									className="site-layout-background"
+									style={{ padding: 24, minHeight: 360 }}
+								>
+									{currentUI}
+								</div>
+							</Content>
+							<Footer style={{ textAlign: "center" }}>
+								ERC777 Donation Distributor ©2021 Created by{" "}
+								<Link href="https://twitter.com/themystery" target="_blank">
+									Prafful Sahu
+								</Link>
+							</Footer>
+						</Layout>
+					</Layout>
+				</Web3Context.Provider>
+			</Content>
+		</Layout>
+		// <div>
+		// 	{!web3React.active && (
+		// 		<button onClick={ConnectWallet}>Connect Wallet!</button>
+		// 	)}
+		// 	{metaMask === "Set" && "Metamask is available"}
+		// </div>
+	);
 }
 
 export default App;

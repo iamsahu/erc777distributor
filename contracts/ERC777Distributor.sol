@@ -38,12 +38,12 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
     mapping (address => bool) public isSubscribing;
 
     //Events
-    event DonationReceived(address from, string token, uint256 amount,uint32 index,address tokenAddress,address publisher);
-    event UserAdded(address userAddress,uint128 shares,uint32 index,address tokenAddress,address publisher);
-    event UserRemoved(address userAddress,uint128 shares,uint32 index,address tokenAddress,address publisher);
-    event UserModified(address userAddress,uint128 shares,uint32 index,address tokenAddress,address publisher);
-    event Distribution(uint256 amountDistributed,uint32 index,address tokenAddress,address publisher);
-    event TotalShares(uint128 totalShares,uint32 index,address tokenAddress,address publisher);
+    event DonationReceived(address from, string token, uint256 amount,uint32 index,address tokenAddress,address publisher,uint timeStamp);
+    event UserAdded(address userAddress,uint128 shares,uint32 index,address tokenAddress,address publisher,uint timeStamp);
+    event UserRemoved(address userAddress,uint128 shares,uint32 index,address tokenAddress,address publisher,uint timeStamp);
+    event UserModified(address userAddress,uint128 shares,uint32 index,address tokenAddress,address publisher,uint timeStamp);
+    event Distribution(uint256 amountDistributed,uint32 index,address tokenAddress,address publisher,uint timeStamp);
+    event TotalShares(uint128 totalShares,uint32 index,address tokenAddress,address publisher,uint timeStamp);
 
     constructor (
         ISuperToken cashToken,
@@ -183,7 +183,7 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
             ),
             new bytes(0) // user data
         );
-        shareMapping[newUser] = shareUnits;
+        
     }
 
     function addUser(address newUser,uint128 sharePercentage) external onlyOwner{
@@ -192,7 +192,8 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
         modifySub(newUser, shareUnits);
         totalShareUnits += shareUnits;
         shareMapping[newUser] = shareUnits;
-        emit UserAdded(newUser,shareUnits,INDEX_ID,address(_cashToken),address(this));
+        emit UserAdded(newUser,shareUnits,INDEX_ID,address(_cashToken),address(this),block.timestamp);
+        emit TotalShares(totalShareUnits,INDEX_ID,address(_cashToken),address(this),block.timestamp);
     }
 
     function modifyUser(address existingUser,uint128 sharePercentage) external onlyOwner{
@@ -201,7 +202,8 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
         modifySub(existingUser, shareUnits);
         totalShareUnits += shareUnits - shareMapping[existingUser];
         shareMapping[existingUser] = shareUnits;
-        emit UserModified(existingUser,shareUnits,INDEX_ID,address(_cashToken),address(this));
+        emit UserModified(existingUser,shareUnits,INDEX_ID,address(_cashToken),address(this),block.timestamp);
+        emit TotalShares(totalShareUnits,INDEX_ID,address(_cashToken),address(this),block.timestamp);
     }
 
     function removeUser(address existingUser) external onlyOwner{
@@ -210,7 +212,8 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
         uint128 temp = shareMapping[existingUser];
         shareMapping[existingUser] = 0;
         modifySub(existingUser, 0);
-        emit UserRemoved(existingUser,temp,INDEX_ID,address(_cashToken),address(this));
+        emit UserRemoved(existingUser,temp,INDEX_ID,address(_cashToken),address(this),block.timestamp);
+        emit TotalShares(totalShareUnits,INDEX_ID,address(_cashToken),address(this),block.timestamp);
     }
 
     /// @dev Distribute `amount` of cash among all token holders
@@ -231,7 +234,7 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
             ),
             new bytes(0) // user data
         );
-        emit Distribution(cashAmount,INDEX_ID,address(_cashToken),address(this));
+        emit Distribution(cashAmount,INDEX_ID,address(_cashToken),address(this),block.timestamp);
     }
 
     function tokensReceived(
@@ -247,7 +250,6 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
         // do stuff
         totalDonations += amount;
         distribute(amount);
-        emit DonationReceived( from, "fDAIz", amount,INDEX_ID,address(_cashToken),address(this));
-    }   
-
+        emit DonationReceived( from, "fDAIz", amount,INDEX_ID,address(_cashToken),address(this),block.timestamp);
+    }
 }
