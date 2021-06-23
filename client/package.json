@@ -4,10 +4,12 @@
   "private": true,
   "dependencies": {
     "@antv/g2plot": "^2.3.24",
+    "@apollo/client": "^3.3.20",
     "@web3-react/core": "^6.1.9",
     "@web3-react/injected-connector": "^6.0.7",
     "antd": "^4.16.3",
     "ethers": "^5.3.1",
+    "graphql": "^15.5.1",
     "react": "16.11.0",
     "react-dom": "16.11.0",
     "react-scripts": "3.2.0",

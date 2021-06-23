@@ -5,6 +5,18 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
+import {
+	ApolloClient,
+	InMemoryCache,
+	ApolloProvider,
+	useQuery,
+	gql,
+} from "@apollo/client";
+
+const client = new ApolloClient({
+	uri: "https://api.thegraph.com/subgraphs/name/iamsahu/idatest/graphql",
+	cache: new InMemoryCache(),
+});
 
 function getLibrary(provider, connector) {
 	// return new ethers.providers.Web3Provider(window.ethereum);
@@ -15,7 +27,9 @@ function getLibrary(provider, connector) {
 
 ReactDOM.render(
 	<Web3ReactProvider getLibrary={getLibrary}>
-		<App />
+		<ApolloProvider client={client}>
+			<App />
+		</ApolloProvider>
 	</Web3ReactProvider>,
 	document.getElementById("root")
 );
