@@ -5,10 +5,25 @@ import AddSubscriber from "../components/AddSubscriber";
 import ModifySubscriber from "../components/ModifySubscriber";
 import RemoveSubscriber from "../components/RemoveSubscriber";
 import { useWeb3React } from "@web3-react/core";
+import { gql, useQuery } from "@apollo/client";
 const { Content } = Layout;
 const { Text, Title } = Typography;
 
 const { Column, ColumnGroup } = Table;
+
+const GET_DOGS = gql`
+	query subscriberEntities {
+		subscriberEntities {
+			id
+			subscriberAddress
+			index
+			tokenAddress
+			publisher
+			timeStamp
+			shares
+		}
+	}
+`;
 
 const data = [
 	{
@@ -29,28 +44,43 @@ const data = [
 ];
 function ManageSubscribers() {
 	const web3React = useWeb3React();
+
+	const { loading, error, data } = useQuery(GET_DOGS);
+	if (loading) {
+		return <div>Loading</div>;
+	}
+	if (error) {
+		console.log(error.message);
+	}
 	return (
 		<Content
 			style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 		>
 			<Title> Manage Benefeciaries</Title>
 			<AddSubscriber />
-			<Table dataSource={data}>
-				<Column title="Address" dataIndex="address" key="address" />
-				<Column title="Share" dataIndex="share" key="share" />
+			<Table dataSource={data.subscriberEntities}>
+				<Column
+					title="Address"
+					dataIndex="subscriberAddress"
+					key="subscriberAddress"
+				/>
+				<Column title="Share" dataIndex="shares" key="shares" />
 				{web3React.active && (
 					<Column
 						title="Action"
 						key="action"
-						render={(text, record) => (
-							<Space size="middle">
-								<ModifySubscriber
-									userAddress="0xE6A6CB0B8E543f3c64adffcA63b603BeB6539c3B"
-									currentShare="test"
-								/>
-								<RemoveSubscriber userAddress="0xd256d54aa96496A85EE49C5e575de1135eabdf3e" />
-							</Space>
-						)}
+						render={(text, record) => {
+							// console.log(record);
+							return (
+								<Space size="middle">
+									<ModifySubscriber
+										userAddress={record.subscriberAddress}
+										currentShare={record.shares}
+									/>
+									<RemoveSubscriber userAddress={record.subscriberAddress} />
+								</Space>
+							);
+						}}
 					/>
 				)}
 			</Table>

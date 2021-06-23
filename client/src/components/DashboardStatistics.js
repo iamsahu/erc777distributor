@@ -1,18 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 import { Statistic, Card, Row, Col } from "antd";
 import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
 import { gql, useQuery } from "@apollo/client";
+import { useWeb3React } from "@web3-react/core";
 
 const GET_DOGS = gql`
 	query GetDogs {
-		dogs {
+		donations {
 			id
-			breed
+			donation
+			tokenAddress
+			timeStamp
 		}
 	}
 `;
 
 function DashboardStatistics() {
+	const web3React = useWeb3React();
+	const { loading, error, data } = useQuery(GET_DOGS);
+	const [val, setVal] = useState("0");
+
+	function calculateTotalDonation() {
+		let value = web3React.library.BigNumber.from(0);
+		for (let index = 0; index < data.donations.length; index++) {
+			const element = data.donations[index];
+			value += web3React.library.BigNumber.from(element["donation"]);
+		}
+		setVal(value.toString());
+	}
+
 	return (
 		<div className="site-statistic-demo-card">
 			<Row gutter={16}>
@@ -20,7 +36,7 @@ function DashboardStatistics() {
 					<Card>
 						<Statistic
 							title="Donations Received"
-							value={11.28}
+							value={loading ? "..." : "100"}
 							// precision={2}
 							valueStyle={{ color: "#3f8600" }}
 							// prefix={<ArrowUpOutlined />}
