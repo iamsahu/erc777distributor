@@ -19,8 +19,8 @@ import "@openzeppelin/contracts/token/ERC777/IERC777Recipient.sol";
 
 contract ERC777Distributor is IERC777Recipient,SuperAppBase {
 
-    uint256 totalDonations=0;
-    uint128 totalShareUnits=100;
+    uint256 public totalDonations=0;
+    uint128 public totalShareUnits=100;
     mapping (address=>uint128) shareMapping;
 
     uint32 public constant INDEX_ID = 0;
@@ -80,7 +80,9 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
         _;
     }
 
-    
+    function sharesOf(address user) view external returns(uint128){
+        return shareMapping[user];
+    }
 
     function beforeAgreementCreated(
         ISuperToken superToken,
@@ -170,14 +172,14 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
         }
     }
 
-    function modifySub(address newUser,uint128 shareUnits) internal{
+    function modifySub(address user,uint128 shareUnits) internal{
         _host.callAgreement(
             _ida,
             abi.encodeWithSelector(
                 _ida.updateSubscription.selector,
                 _cashToken,
                 INDEX_ID,
-                newUser,
+                user,
                 shareUnits,
                 new bytes(0) // placeholder ctx
             ),
@@ -186,8 +188,17 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
         
     }
 
+    function abs(uint128 x,uint128 y) private pure returns (uint128) {
+        if(x>y)
+         return x-y;
+        if(x<y)
+         return y-x;
+        if(x==y)
+         return x;
+    }
+
     function addUser(address newUser,uint128 sharePercentage) external onlyOwner{
-        require(shareMapping[newUser]==0,'User exists');
+        require(shareMapping[newUser]==0,"User already exists");
         uint128 shareUnits = (sharePercentage * totalShareUnits)/(100- sharePercentage);
         modifySub(newUser, shareUnits);
         totalShareUnits += shareUnits;
@@ -198,9 +209,10 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
 
     function modifyUser(address existingUser,uint128 sharePercentage) external onlyOwner{
         require(shareMapping[existingUser]!=0,"User doesn't exist");
-        uint128 shareUnits = (sharePercentage * (totalShareUnits-shareMapping[existingUser]))/(100- sharePercentage);
+        uint128 shareUnits = (sharePercentage * abs(totalShareUnits,shareMapping[existingUser]))/(100- sharePercentage);
         modifySub(existingUser, shareUnits);
-        totalShareUnits += shareUnits - shareMapping[existingUser];
+        totalShareUnits -= shareMapping[existingUser];//Need to handle case where shareMapping is larger than total share units
+        totalShareUnits += shareUnits ;
         shareMapping[existingUser] = shareUnits;
         emit UserModified(existingUser,shareUnits,INDEX_ID,address(_cashToken),address(this),block.timestamp);
         emit TotalShares(totalShareUnits,INDEX_ID,address(_cashToken),address(this),block.timestamp);
