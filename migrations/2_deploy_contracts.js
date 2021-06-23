@@ -40,7 +40,7 @@ var Migrations = artifacts.require("./ERC777Distributor.sol");
 module.exports = function (deployer) {
 	deployer.deploy(
 		Migrations,
-		"0x745861AeD1EEe363b4AaA5F1994Be40b1e05Ff90",
+		// "0x745861AeD1EEe363b4AaA5F1994Be40b1e05Ff90", 
 		"0xeD5B5b32110c3Ded02a07c8b8e97513FAfb883B6",
 		"0x32E0ecb72C1dDD92B007405F8102c1556624264D"
 	);
