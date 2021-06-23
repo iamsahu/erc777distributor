@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Statistic, Card, Row, Col } from "antd";
 import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
 import { gql, useQuery } from "@apollo/client";
 import { useWeb3React } from "@web3-react/core";
-
+import { BigNumber } from "@ethersproject/bignumber";
+import { formatEther } from "@ethersproject/units";
 const GET_DOGS = gql`
 	query GetDogs {
 		donations {
@@ -20,14 +21,20 @@ function DashboardStatistics() {
 	const { loading, error, data } = useQuery(GET_DOGS);
 	const [val, setVal] = useState("0");
 
-	function calculateTotalDonation() {
-		let value = web3React.library.BigNumber.from(0);
-		for (let index = 0; index < data.donations.length; index++) {
-			const element = data.donations[index];
-			value += web3React.library.BigNumber.from(element["donation"]);
+	useEffect(() => {
+		if (!loading) {
+			function calculateTotalDonation() {
+				let value = BigNumber.from(0);
+				for (let index = 0; index < data.donations.length; index++) {
+					const element = data.donations[index];
+					value = value.add(BigNumber.from(element["donation"]));
+				}
+				// console.log(formatEther(value));
+				setVal(formatEther(value).toString());
+			}
+			calculateTotalDonation();
 		}
-		setVal(value.toString());
-	}
+	}, [loading]);
 
 	return (
 		<div className="site-statistic-demo-card">
@@ -36,7 +43,7 @@ function DashboardStatistics() {
 					<Card>
 						<Statistic
 							title="Donations Received"
-							value={loading ? "..." : "100"}
+							value={val}
 							// precision={2}
 							valueStyle={{ color: "#3f8600" }}
 							// prefix={<ArrowUpOutlined />}

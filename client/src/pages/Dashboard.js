@@ -1,6 +1,7 @@
 import React from "react";
 import { Tabs, Typography, Layout, Divider } from "antd";
 import DashboardStatistics from "../components/DashboardStatistics";
+import DonationLineChart from "../components/DonationLineChart";
 const { Content } = Layout;
 const { Text, Title } = Typography;
 
@@ -12,6 +13,7 @@ function Dashboard() {
 			<Title> Dashboard</Title>
 			<br />
 			<DashboardStatistics />
+			<DonationLineChart />
 		</Content>
 	);
 }
