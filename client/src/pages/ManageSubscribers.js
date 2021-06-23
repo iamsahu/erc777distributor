@@ -42,15 +42,19 @@ function ManageSubscribers() {
 					<Column
 						title="Action"
 						key="action"
-						render={(text, record) => (
-							<Space size="middle">
-								<ModifySubscriber
-									userAddress="0xE6A6CB0B8E543f3c64adffcA63b603BeB6539c3B"
-									currentShare="test"
-								/>
-								<RemoveSubscriber userAddress="0xE6A6CB0B8E543f3c64adffcA63b603BeB6539c3B" />
-							</Space>
-						)}
+						render={(text, record) => {
+							// console.log(text);
+							// console.log(record);
+							return (
+								<Space size="middle">
+									<ModifySubscriber
+										userAddress="0xE6A6CB0B8E543f3c64adffcA63b603BeB6539c3B"
+										currentShare="test"
+									/>
+									<RemoveSubscriber userAddress="0xE6A6CB0B8E543f3c64adffcA63b603BeB6539c3B" />
+								</Space>
+							);
+						}}
 					/>
 				)}
 			</Table>

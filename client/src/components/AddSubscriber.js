@@ -1,10 +1,11 @@
 import React from "react";
-import { Form, Input, InputNumber, Modal, Button } from "antd";
+import { Form, Input, InputNumber, Modal, Button, notification } from "antd";
 // import { SmileOutlined, UserOutlined } from "@ant-design/icons";
 // import { FormInstance } from "antd/lib/form";
 import { useWeb3React } from "@web3-react/core";
 import { Contract } from "@ethersproject/contracts";
 import ERC777Distributor from "../contracts/ERC777Distributor.json";
+
 // import Web3Context from "../context/Web3Context";
 
 function AddSubscriber() {
@@ -16,6 +17,27 @@ function AddSubscriber() {
 	const [confirmLoading, setConfirmLoading] = React.useState(false);
 
 	const [form] = Form.useForm();
+	const openNotification = () => {
+		notification["success"]({
+			message: "Success!",
+			description: "Beneficiary added successfully!",
+			duration: 2.5,
+			onClick: () => {
+				console.log("Notification Clicked!");
+			},
+		});
+	};
+
+	const openFailNotification = () => {
+		notification["error"]({
+			message: "Fail!",
+			description: "Beneficiary addition failed!",
+			duration: 2.5,
+			onClick: () => {
+				console.log("Notification Clicked!");
+			},
+		});
+	};
 	const showModal = () => {
 		setVisible(true);
 	};
@@ -57,11 +79,13 @@ function AddSubscriber() {
 					console.log(response);
 					setVisible(false);
 					setConfirmLoading(false);
+					openNotification();
 				})
 				.catch((error) => {
 					setVisible(false);
 					setConfirmLoading(false);
 					console.log(error.message);
+					openFailNotification();
 				});
 
 		// .on("confirmation", function (confirmationNumber, receipt) {
@@ -98,6 +122,9 @@ function AddSubscriber() {
 						onCancel={onCancel}
 						confirmLoading={confirmLoading}
 					>
+						<p>
+							Please note that the first beneficiary gets 100% of the donation
+						</p>
 						<Form
 							form={form}
 							layout="vertical"

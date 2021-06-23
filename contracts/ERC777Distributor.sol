@@ -20,7 +20,7 @@ import "@openzeppelin/contracts/token/ERC777/IERC777Recipient.sol";
 contract ERC777Distributor is IERC777Recipient,SuperAppBase {
 
     uint256 public totalDonations=0;
-    uint128 public totalShareUnits=100;
+    uint128 public totalShareUnits=0;
     mapping (address=>uint128) shareMapping;
     mapping (address=>string) tokenNameMapping;
 
@@ -290,7 +290,9 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
 
     function addUser(address newUser,uint128 sharePercentage) external onlyOwner{
         require(shareMapping[newUser]==0,"User already exists");
-        uint128 shareUnits = (sharePercentage * totalShareUnits)/(100- sharePercentage);
+        require(sharePercentage>0,"Share Percentage should be greater than zero");
+
+        uint128 shareUnits = totalShareUnits==0?sharePercentage: (sharePercentage * totalShareUnits)/(100- sharePercentage);
         modifySub(newUser, shareUnits);
         totalShareUnits += shareUnits;
         shareMapping[newUser] = shareUnits;
@@ -300,7 +302,8 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
 
     function modifyUser(address existingUser,uint128 sharePercentage) external onlyOwner{
         require(shareMapping[existingUser]!=0,"User doesn't exist");
-        uint128 shareUnits = (sharePercentage * abs(totalShareUnits,shareMapping[existingUser]))/(100- sharePercentage);
+        require(sharePercentage>0,"Share Percentage should be greater than zero");
+        uint128 shareUnits = totalShareUnits==shareMapping[existingUser]?sharePercentage:(sharePercentage * abs(totalShareUnits,shareMapping[existingUser]))/(100- sharePercentage);
         modifySub(existingUser, shareUnits);
         totalShareUnits -= shareMapping[existingUser];//Need to handle case where shareMapping is larger than total share units
         totalShareUnits += shareUnits ;
