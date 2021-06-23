@@ -44,7 +44,10 @@ function ManageSubscribers() {
 						key="action"
 						render={(text, record) => (
 							<Space size="middle">
-								<ModifySubscriber userAddress="0xd256d54aa96496A85EE49C5e575de1135eabdf3e" currentShare="test" />
+								<ModifySubscriber
+									userAddress="0xE6A6CB0B8E543f3c64adffcA63b603BeB6539c3B"
+									currentShare="test"
+								/>
 								<RemoveSubscriber userAddress="0xd256d54aa96496A85EE49C5e575de1135eabdf3e" />
 							</Space>
 						)}

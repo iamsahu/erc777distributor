@@ -8,6 +8,7 @@ import ManageSubscribers from "./pages/ManageSubscribers";
 import DonationsTimeline from "./pages/DonationsTimeline";
 import Web3Context from "./context/Web3Context";
 import ERC777Distributor from "./contracts/ERC777Distributor.json";
+import { Contract } from "@ethersproject/contracts";
 import "./App.css";
 
 import { Layout, Menu, Button } from "antd";
@@ -56,9 +57,9 @@ function App() {
 				const web3 = new Web3(provider);
 				// console.log("web3 found");
 				// console.log(web3);
-        // const networkId = await web3.eth.net.getId();
+				// const networkId = await web3.eth.net.getId();
 				details.current.web3 = web3;
-        // details.current.networkId = networkId;
+				// details.current.networkId = networkId;
 				setMetaMask("GotWeb3");
 				provider.on("chainChanged", handleChainChanged);
 				provider.on("accountsChanged", handleAccountsChanged);
@@ -72,13 +73,18 @@ function App() {
 			return;
 		}
 		const networkId = details.current.chainid;
-    console.log(networkId);
+		// console.log(networkId);
 		const cc = ERC777Distributor.networks[networkId];
-    console.log(cc)
+		// console.log(cc);
 		const local1nstance = new details.current.web3.eth.Contract(
 			ERC777Distributor.abi,
 			cc.address
 		);
+		// const con = new Contract(
+		// 	ERC777Distributor.networks[web3React.chainId].address,
+		// 	ERC777Distributor.abi,
+		// 	web3React.library.getSigner()
+		// );
 		details.current.mainContract = local1nstance;
 		details.current.web3.eth.getAccounts((err, accounts) => {
 			if (err) {
