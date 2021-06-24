@@ -47,7 +47,7 @@ function ManageSubscribers() {
 			var temp = [];
 			for (let index = 0; index < data.subscriberEntities.length; index++) {
 				let element = Object.assign({}, data.subscriberEntities[index]);
-				console.log(element);
+				// console.log(element);
 				element["shares"] =
 					(
 						(parseInt(data.subscriberEntities[index]["shares"]) /

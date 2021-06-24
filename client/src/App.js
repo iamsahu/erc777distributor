@@ -44,6 +44,7 @@ function App() {
 	const activateWeb3 = () => {
 		web3React.activate(injected, onError, true).catch((err) => {
 			console.error(err);
+
 			// debugger;
 		});
 	};
@@ -58,6 +59,7 @@ function App() {
 				// console.log(web3);
 				// const networkId = await web3.eth.net.getId();
 				details.current.web3 = web3;
+				details.current.chainid = web3React.chainId;
 				// details.current.networkId = networkId;
 				setMetaMask("GotWeb3");
 				provider.on("chainChanged", handleChainChanged);
@@ -73,7 +75,7 @@ function App() {
 		}
 		const networkId = details.current.chainid;
 		// console.log(networkId);
-		const cc = ERC777Distributor.networks[networkId];
+		const cc = ERC777Distributor.networks[web3React.chainId];
 		// console.log(cc);
 		const local1nstance = new details.current.web3.eth.Contract(
 			ERC777Distributor.abi,
@@ -98,28 +100,28 @@ function App() {
 		});
 	}, [details.current.web3]);
 
-	useEffect(() => {
-		async function setup() {
-			const web3 = await getWeb3();
-			console.log("web3 found");
-			details.current.web3 = web3;
-			details.current.chainid = parseInt(await web3.eth.getChainId());
-			setMetaMask("GotWeb3");
-			await web3.eth.getAccounts((error, accounts) => {
-				details.current.accounts = accounts;
-				console.log(accounts);
-				if (accounts.length > 0) {
-					setMetaMask("Set");
-					console.log("Set in accounts");
-					web3React.activate(injected, onError, true).catch((err) => {
-						console.error(err);
-						debugger;
-					});
-				}
-			});
-		}
-		setup();
-	}, []);
+	// useEffect(() => {
+	// 	async function setup() {
+	// 		const web3 = await getWeb3();
+	// 		console.log("web3 found");
+	// 		details.current.web3 = web3;
+	// 		details.current.chainid = parseInt(await web3.eth.getChainId());
+	// 		setMetaMask("GotWeb3");
+	// 		await web3.eth.getAccounts((error, accounts) => {
+	// 			details.current.accounts = accounts;
+	// 			console.log(accounts);
+	// 			if (accounts.length > 0) {
+	// 				setMetaMask("Set");
+	// 				console.log("Set in accounts");
+	// 				web3React.activate(injected, onError, true).catch((err) => {
+	// 					console.error(err);
+	// 					debugger;
+	// 				});
+	// 			}
+	// 		});
+	// 	}
+	// 	setup();
+	// }, []);
 
 	//TO DO: Handling the following
 

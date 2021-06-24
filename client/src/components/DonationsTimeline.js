@@ -26,6 +26,7 @@ function DonationsTimeline() {
 	}
 	if (error) {
 		console.log(error.message);
+		return <div>SOmething went wrong</div>;
 	}
 
 	return (
