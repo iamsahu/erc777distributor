@@ -8,10 +8,10 @@ import { formatEther } from "@ethersproject/units";
 const GET_DOGS = gql`
 	query GetDogs {
 		donations {
+			token
 			id
+			index
 			donation
-			tokenAddress
-			timeStamp
 		}
 	}
 `;
@@ -23,6 +23,7 @@ function DashboardStatistics() {
 
 	useEffect(() => {
 		if (!loading) {
+			console.log(data);
 			function calculateTotalDonation() {
 				let value = BigNumber.from(0);
 				for (let index = 0; index < data.donations.length; index++) {
@@ -35,6 +36,10 @@ function DashboardStatistics() {
 			calculateTotalDonation();
 		}
 	}, [loading]);
+
+	if (error) {
+		console.log(error.message);
+	}
 
 	return (
 		<div className="site-statistic-demo-card">

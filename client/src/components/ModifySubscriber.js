@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, InputNumber, Modal, Button } from "antd";
+import { Form, InputNumber, Modal, Button, notification } from "antd";
 // import { SmileOutlined, UserOutlined } from "@ant-design/icons";
 // import { FormInstance } from "antd/lib/form";
 import { useWeb3React } from "@web3-react/core";
@@ -13,6 +13,29 @@ function ModifySubscriber(props) {
 	const [confirmLoading, setConfirmLoading] = React.useState(false);
 
 	const [form] = Form.useForm();
+
+	const openNotification = () => {
+		notification["success"]({
+			message: "Success!",
+			description: "The share modification worked successfully!",
+			duration: 2.5,
+			onClick: () => {
+				console.log("Notification Clicked!");
+			},
+		});
+	};
+
+	const openFailNotification = () => {
+		notification["error"]({
+			message: "Fail!",
+			description: "The share modification was unsuccessfull!",
+			duration: 2.5,
+			onClick: () => {
+				console.log("Notification Clicked!");
+			},
+		});
+	};
+
 	const showModal = () => {
 		setVisible(true);
 	};
@@ -55,11 +78,13 @@ function ModifySubscriber(props) {
 				console.log(response);
 				setVisible(false);
 				setConfirmLoading(false);
+				openNotification();
 			})
 			.catch((error) => {
 				setVisible(false);
 				setConfirmLoading(false);
 				console.log(error.message);
+				openFailNotification();
 			});
 		// .send({ from: web3React.account })
 		// .on("confirmation", function (confirmationNumber, receipt) {

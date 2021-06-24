@@ -17,10 +17,10 @@ const GET_DOGS = gql`
 			id
 			subscriberAddress
 			index
-			tokenAddress
 			publisher
 			timeStamp
 			shares
+			totalShares
 		}
 	}
 `;

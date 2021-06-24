@@ -12,8 +12,9 @@ const GET_donations = gql`
 		donations {
 			id
 			donation
-			tokenAddress
+			token
 			timeStamp
+			from
 		}
 	}
 `;
@@ -37,10 +38,11 @@ function DonationsTimeline() {
 					Created the donation receiving contract on 10/10/2021
 				</Timeline.Item>
 				{data.donations.map((record) => (
-					<Timeline.Item>
+					<Timeline.Item key={record.id}>
 						Received a donation of{" "}
-						{formatEther(BigNumber.from(record.donation)).toString()} on{" "}
-						{timeConverter(record.timeStamp)}
+						{formatEther(BigNumber.from(record.donation)).toString()}{" "}
+						{record.token} on {timeConverter(record.timeStamp)} from{" "}
+						{record.from.toString()}
 					</Timeline.Item>
 				))}
 				{/* <Timeline.Item>

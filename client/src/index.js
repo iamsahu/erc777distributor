@@ -14,7 +14,7 @@ import {
 } from "@apollo/client";
 
 const client = new ApolloClient({
-	uri: "https://api.thegraph.com/subgraphs/name/iamsahu/idatest",
+	uri: process.env.REACT_APP_GRAPHQL, //"http://localhost:8000/subgraphs/name/iamsahu/idatest",
 	cache: new InMemoryCache(),
 });
 
