@@ -2,7 +2,8 @@ import React from "react";
 import { Timeline, Layout, Typography } from "antd";
 import { gql, useQuery } from "@apollo/client";
 import { timeConverter } from "../helpers/HelperFunctions";
-
+import { BigNumber } from "@ethersproject/bignumber";
+import { formatEther } from "@ethersproject/units";
 const { Content } = Layout;
 const { Title } = Typography;
 
@@ -37,7 +38,8 @@ function DonationsTimeline() {
 				</Timeline.Item>
 				{data.donations.map((record) => (
 					<Timeline.Item>
-						Received a donation of {record.donation} on{" "}
+						Received a donation of{" "}
+						{formatEther(BigNumber.from(record.donation)).toString()} on{" "}
 						{timeConverter(record.timeStamp)}
 					</Timeline.Item>
 				))}
