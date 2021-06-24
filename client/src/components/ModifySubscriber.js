@@ -106,7 +106,7 @@ function ModifySubscriber(props) {
 		// setVisible(false);
 		// setConfirmLoading(false);
 	};
-	const existShare = "Existing share%: " + props.currentShare;
+	const existShare = "Existing share: " + props.currentShare;
 
 	return (
 		<>

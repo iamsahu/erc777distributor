@@ -49,5 +49,5 @@ export function timeConverterIndiv(UNIX_timestamp) {
 	var sec = a.getSeconds();
 	var time =
 		date + " " + month + " " + year + " " + hour + ":" + min + ":" + sec;
-	return date, month, year;
+	return [date, month, year];
 }

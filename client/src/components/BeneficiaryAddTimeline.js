@@ -9,7 +9,7 @@ const { Title } = Typography;
 
 const GET_donations = gql`
 	query donations {
-		donations {
+		donations(orderBy: timeStamp) {
 			id
 			donation
 			token
@@ -19,7 +19,7 @@ const GET_donations = gql`
 	}
 `;
 
-function DonationsTimeline() {
+function BeneficiaryAdditionTimeline() {
 	const { loading, error, data } = useQuery(GET_donations);
 	if (loading) {
 		return <div>Loading</div>;
@@ -32,7 +32,6 @@ function DonationsTimeline() {
 		<Content
 			style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 		>
-			<Title>Donations Timeline</Title>
 			<Timeline>
 				<Timeline.Item>
 					Created the donation receiving contract on 10/10/2021
@@ -57,5 +56,4 @@ function DonationsTimeline() {
 		</Content>
 	);
 }
-
-export default DonationsTimeline;
+export default BeneficiaryAdditionTimeline;

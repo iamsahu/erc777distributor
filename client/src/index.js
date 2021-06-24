@@ -5,13 +5,7 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { Web3ReactProvider } from "@web3-react/core";
 import { Web3Provider } from "@ethersproject/providers";
-import {
-	ApolloClient,
-	InMemoryCache,
-	ApolloProvider,
-	useQuery,
-	gql,
-} from "@apollo/client";
+import { ApolloClient, InMemoryCache, ApolloProvider } from "@apollo/client";
 
 const client = new ApolloClient({
 	uri: process.env.REACT_APP_GRAPHQL, //"http://localhost:8000/subgraphs/name/iamsahu/idatest",

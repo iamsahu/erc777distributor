@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Tabs, Typography, Layout, Divider } from "antd";
 import { Table, Tag, Space } from "antd";
 import AddSubscriber from "../components/AddSubscriber";
@@ -22,43 +22,62 @@ const GET_DOGS = gql`
 			shares
 			totalShares
 		}
+		subscription2S(
+			where: { publisher: "0x4f708393c541fa97594de71297ac3dff5a71247b" }
+		) {
+			id
+			totalShares
+			index
+			publisher
+			timeStamp
+		}
 	}
 `;
 
-const data = [
-	{
-		key: "1",
-		share: 30,
-		address: "0x18e884951F37Ce547fe1c6CF66Bc31E1C05206dE",
-	},
-	{
-		key: "2",
-		share: 40,
-		address: "0xB820c4623E006d07aDF25a72cd28BEE517266Da5",
-	},
-	{
-		key: "3",
-		share: 30,
-		address: "0x904259ADc7cf7e7e4F8Dd529aa85E6bcEd7917C8",
-	},
-];
 function ManageSubscribers() {
 	const web3React = useWeb3React();
 
 	const { loading, error, data } = useQuery(GET_DOGS);
+	const [dataPoints, setdata] = useState([]);
+
+	useEffect(() => {
+		if (!loading) {
+			// console.log(data);
+			const totalShares = data.subscription2S[0].totalShares;
+			var temp = [];
+			for (let index = 0; index < data.subscriberEntities.length; index++) {
+				let element = Object.assign({}, data.subscriberEntities[index]);
+				console.log(element);
+				element["shares"] =
+					(
+						(parseInt(data.subscriberEntities[index]["shares"]) /
+							parseInt(totalShares)) *
+						100
+					)
+						.toFixed(2)
+						.toString() + " %";
+				temp.push(element);
+			}
+			setdata(temp);
+		}
+	}, [loading]);
+
 	if (loading) {
 		return <div>Loading</div>;
 	}
+
 	if (error) {
 		console.log(error.message);
+		return <div>Something went wrong</div>;
 	}
+
 	return (
 		<Content
 			style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 		>
-			<Title> Manage Benefeciaries</Title>
+			<Title> Manage Beneficiaries</Title>
 			<AddSubscriber />
-			<Table dataSource={data.subscriberEntities}>
+			<Table dataSource={dataPoints}>
 				<Column
 					title="Address"
 					dataIndex="subscriberAddress"

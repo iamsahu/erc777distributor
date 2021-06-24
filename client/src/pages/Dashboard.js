@@ -13,7 +13,7 @@ function Dashboard() {
 			<Title> Dashboard</Title>
 			<br />
 			<DashboardStatistics />
-			{/* <DonationLineChart /> */}
+			<DonationLineChart />
 		</Content>
 	);
 }

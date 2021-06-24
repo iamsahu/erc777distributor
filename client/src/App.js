@@ -5,10 +5,9 @@ import getWeb3 from "./getWeb3";
 import Web3 from "web3";
 import Dashboard from "./pages/Dashboard";
 import ManageSubscribers from "./pages/ManageSubscribers";
-import DonationsTimeline from "./pages/DonationsTimeline";
+import TimeLine from "./pages/TimeLine";
 import Web3Context from "./context/Web3Context";
 import ERC777Distributor from "./contracts/ERC777Distributor.json";
-import { Contract } from "@ethersproject/contracts";
 import "./App.css";
 
 import { Layout, Menu, Button } from "antd";
@@ -162,36 +161,6 @@ function App() {
 
 		// Get the address of the most recent deployment from the deployment map
 		const deployedNetwork = contract.networks[details.current.chainid];
-		// console.log(deployedNetwork.address);
-		// const instance = new web3.eth.Contract(
-		//   contract.abi,
-		//   deployedNetwork && deployedNetwork.address
-		// );
-
-		// return instance;
-
-		// let address;
-		// try {
-		// 	address = map[chain][contractName][0];
-		// } catch (e) {
-		// 	console.log(
-		// 		`Couldn't find any deployed contract "${contractName}" on the chain "${chain}".`
-		// 	);
-		// 	return undefined;
-		// }
-		// // console.log("Address " + address);
-		// // Load the artifact with the specified address
-		// let contractArtifact;
-		// try {
-		// 	contractArtifact = await import(
-		// 		`./artifacts/deployments/${chain}/${address}.json`
-		// 	);
-		// } catch (e) {
-		// 	console.log(
-		// 		`Failed to load contract artifact "./artifacts/deployments/${chain}/${address}.json"`
-		// 	);
-		// 	return undefined;
-		// }
 
 		return new details.current.web3.eth.Contract(
 			contract.abi,
@@ -213,7 +182,7 @@ function App() {
 				setcurrentUI(<ManageSubscribers />);
 				break;
 			case "3":
-				setcurrentUI(<DonationsTimeline />);
+				setcurrentUI(<TimeLine />);
 				break;
 			case "4":
 				// setcurrentUI(<Borrow />);
