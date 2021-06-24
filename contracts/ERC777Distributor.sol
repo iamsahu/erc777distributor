@@ -315,10 +315,9 @@ contract ERC777Distributor is IERC777Recipient,SuperAppBase {
     function removeUser(address existingUser) external onlyOwner{
         require(shareMapping[existingUser]!=0,"User doesn't exist");
         totalShareUnits -= shareMapping[existingUser];
-        uint128 temp = shareMapping[existingUser];
         shareMapping[existingUser] = 0;
         modifySub(existingUser, 0);
-        emit UserRemoved(existingUser,temp,INDEX_ID,address(this),block.timestamp,totalShareUnits);
+        emit UserRemoved(existingUser,0,INDEX_ID,address(this),block.timestamp,totalShareUnits);//Changed the shareUnits to zero to read in the frontend the exit of the user
         emit TotalShares(totalShareUnits,INDEX_ID,address(this),block.timestamp);
     }
 

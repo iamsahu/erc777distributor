@@ -41,7 +41,7 @@ function ManageSubscribers() {
 	const [dataPoints, setdata] = useState([]);
 
 	useEffect(() => {
-		if (!loading) {
+		if (!loading && data) {
 			// console.log(data);
 			const totalShares = data.subscription2S[0].totalShares;
 			var temp = [];

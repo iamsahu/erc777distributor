@@ -32,7 +32,7 @@ function USDCxStats() {
 				// console.log(formatEther(value));
 				setVal(formatEther(value).toString());
 			}
-			if (data.donations !== undefined) calculateTotalDonation();
+			if (data) if (data.donations !== undefined) calculateTotalDonation();
 		}
 	}, [loading, data]);
 
