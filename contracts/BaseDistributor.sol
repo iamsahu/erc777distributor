@@ -42,7 +42,7 @@ contract BaseDistributor is IERC777Recipient,SuperAppBase,Initializable {
     ISuperfluid private _host;
     IInstantDistributionAgreementV1 private _ida;
 
-    IERC1820Registry private _erc1820 = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
+    IERC1820Registry private _erc1820;// = IERC1820Registry(0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24);
     bytes32 constant private TOKENS_RECIPIENT_INTERFACE_HASH = keccak256("ERC777TokensRecipient");
 
     // use callbacks to track approved subscriptions
@@ -58,24 +58,33 @@ contract BaseDistributor is IERC777Recipient,SuperAppBase,Initializable {
 
     function initialize (
         ISuperfluid host,
-        IInstantDistributionAgreementV1 ida,address emitterAdd,address _owner) public {
+        IInstantDistributionAgreementV1 ida,
+        address emitterAdd,
+        address _owner,
+        address _fDAIx,
+        address _fUSDCx,
+        address _fTUSDx,
+        
+        address _erc1820Add
+        ) public {
 
         emitter = Emitter(emitterAdd);
         owner = _owner;
+        _erc1820 = IERC1820Registry(_erc1820Add);
         // transferOwnership(_owner);
-        _erc1820.setInterfaceImplementer(address(this), TOKENS_RECIPIENT_INTERFACE_HASH, address(this));
+        
 
-         fDAIx = ISuperToken(0x745861AeD1EEe363b4AaA5F1994Be40b1e05Ff90);
-        tokenNameMapping[0x745861AeD1EEe363b4AaA5F1994Be40b1e05Ff90] = "fDAIx";
+         fDAIx = ISuperToken(_fDAIx);
+        tokenNameMapping[_fDAIx] = "fDAIx";
 
-         fUSDCx = ISuperToken(0x0F1D7C55A2B133E000eA10EeC03c774e0d6796e8);
-        tokenNameMapping[0x0F1D7C55A2B133E000eA10EeC03c774e0d6796e8] = "fUSDCx";
+         fUSDCx = ISuperToken(_fUSDCx);
+        tokenNameMapping[_fUSDCx] = "fUSDCx";
 
-         fTUSDx = ISuperToken(0xdF7B8461a1d9f57f12F88d97FC6131E36d302d81);
-        tokenNameMapping[0xdF7B8461a1d9f57f12F88d97FC6131E36d302d81] = "fTUSDx";
+         fTUSDx = ISuperToken(_fTUSDx);
+        tokenNameMapping[_fTUSDx] = "fTUSDx";
 
-         ETHx = ISuperToken(0xa623b2DD931C5162b7a0B25852f4024Db48bb1A0);
-        tokenNameMapping[0xa623b2DD931C5162b7a0B25852f4024Db48bb1A0] = "ETHx";
+        //  ETHx = ISuperToken(_ETHx);
+        // tokenNameMapping[_ETHx] = "ETHx";
 
         
         _host = host;
@@ -83,13 +92,15 @@ contract BaseDistributor is IERC777Recipient,SuperAppBase,Initializable {
     }
 
     function initalize2() external onlyOwner{
+        _erc1820.setInterfaceImplementer(address(this), TOKENS_RECIPIENT_INTERFACE_HASH, address(this));
+
         uint256 configWord =
             SuperAppDefinitions.APP_LEVEL_FINAL |
             SuperAppDefinitions.BEFORE_AGREEMENT_TERMINATED_NOOP |
             SuperAppDefinitions.AFTER_AGREEMENT_TERMINATED_NOOP;
 
         _host.registerApp(configWord);
-//How would the below methods change with proxy/cloning? How would initialization of superapp change
+        //How would the below methods change with proxy/cloning? How would initialization of superapp change
         _host.callAgreement(
             _ida,
             abi.encodeWithSelector(
@@ -123,20 +134,20 @@ contract BaseDistributor is IERC777Recipient,SuperAppBase,Initializable {
             new bytes(0) // user data
         );
 
-        _host.callAgreement(
-            _ida,
-            abi.encodeWithSelector(
-                _ida.createIndex.selector,
-                ETHx,
-                INDEX_ID,
-                new bytes(0) // placeholder ctx
-            ),
-            new bytes(0) // user data
-        );
+        // _host.callAgreement(
+        //     _ida,
+        //     abi.encodeWithSelector(
+        //         _ida.createIndex.selector,
+        //         ETHx,
+        //         INDEX_ID,
+        //         new bytes(0) // placeholder ctx
+        //     ),
+        //     new bytes(0) // user data
+        // );
     }
 
     modifier onlyOwner(){
-        require(owner==msg.sender);
+        require(owner==msg.sender,"Only the owner could use this");
         _;
     }
 

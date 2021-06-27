@@ -3,7 +3,6 @@ import './CloneFactory.sol';
 import '@openzeppelin/contracts/access/Ownable.sol';
 import './BaseDistributor.sol';
 
-
 contract DistributorFactory is CloneFactory,Ownable{
     address emitter;
     address distributorContract;
@@ -18,10 +17,13 @@ contract DistributorFactory is CloneFactory,Ownable{
     distributorContract = _libraryAddress;
   }
 
-  function createThing(ISuperfluid host,
-        IInstantDistributionAgreementV1 ida) public onlyOwner {
+  function createThing(ISuperfluid host, IInstantDistributionAgreementV1 ida,
+        address _fDAIx,
+        address _fUSDCx,
+        address _fTUSDx,
+        address _erc1820Add) public {
     address clone = createClone(distributorContract);
-    BaseDistributor(clone).initialize(host,ida,emitter,msg.sender);
+    BaseDistributor(clone).initialize(host,ida,emitter,msg.sender,_fDAIx,_fUSDCx,_fTUSDx,_erc1820Add);
     distributors.push(clone);
     emit ThingCreated(clone);
   }

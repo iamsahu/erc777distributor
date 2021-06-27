@@ -12756,9 +12756,258 @@
     "name": "solc",
     "version": "0.8.0+commit.c7dfd78e.Emscripten.clang"
   },
-  "networks": {},
+  "networks": {
+    "5777": {
+      "events": {
+        "0xac31fd416e918b8a8d73ff2fab2dde3251bd00db40031e5990cedac15771e6d2": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amountDistributed",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint32",
+              "name": "index",
+              "type": "uint32"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "publisher",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeStamp",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "token",
+              "type": "string"
+            }
+          ],
+          "name": "Distribution",
+          "type": "event"
+        },
+        "0x06025452741aefba2517f074584c98b74e7fbf558c672e1deb190dd1c4ac2e78": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "string",
+              "name": "token",
+              "type": "string"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "amount",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint32",
+              "name": "index",
+              "type": "uint32"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "publisher",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeStamp",
+              "type": "uint256"
+            }
+          ],
+          "name": "DonationReceived",
+          "type": "event"
+        },
+        "0x3f0b37810834384d2e75ddcb117cea7717a403ca60272c9824cb42c665f05ad6": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "uint128",
+              "name": "totalShares",
+              "type": "uint128"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint32",
+              "name": "index",
+              "type": "uint32"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "publisher",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeStamp",
+              "type": "uint256"
+            }
+          ],
+          "name": "TotalShares",
+          "type": "event"
+        },
+        "0x9b1f4981fdb1f3b5689710b2535cafc1b22e22c05bb12a0ca9acb1293a49e82c": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "userAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint128",
+              "name": "shares",
+              "type": "uint128"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint32",
+              "name": "index",
+              "type": "uint32"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "publisher",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeStamp",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint128",
+              "name": "totalShares",
+              "type": "uint128"
+            }
+          ],
+          "name": "UserAdded",
+          "type": "event"
+        },
+        "0x065689651f18eaf808ec5f8ccb6b7a8ef5a7a1ddfdd58314da33fc5637d12522": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "userAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint128",
+              "name": "shares",
+              "type": "uint128"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint32",
+              "name": "index",
+              "type": "uint32"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "publisher",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeStamp",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint128",
+              "name": "totalShares",
+              "type": "uint128"
+            }
+          ],
+          "name": "UserModified",
+          "type": "event"
+        },
+        "0x770a7097ec8f9d359bc549b4a53c8664d6ba32764ccef1e1954cf4ebae0f0021": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "userAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint128",
+              "name": "shares",
+              "type": "uint128"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint32",
+              "name": "index",
+              "type": "uint32"
+            },
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "publisher",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint256",
+              "name": "timeStamp",
+              "type": "uint256"
+            },
+            {
+              "indexed": false,
+              "internalType": "uint128",
+              "name": "totalShares",
+              "type": "uint128"
+            }
+          ],
+          "name": "UserRemoved",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x2A61a18465678717EC106E7B5B1652a7AAcf1957",
+      "transactionHash": "0xda097253e5b8e62458d1bef85cff4b5bab9928e46e131776064e1c2c3ed7d885"
+    }
+  },
   "schemaVersion": "3.3.3",
-  "updatedAt": "2021-06-25T14:37:46.266Z",
+  "updatedAt": "2021-06-27T08:04:55.274Z",
+  "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
     "methods": {},

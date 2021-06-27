@@ -36,8 +36,15 @@
 // };
 
 var Migrations = artifacts.require("./ERC777Distributor.sol");
+const Emitter = artifacts.require("Emitter");
+const BaseDistributor = artifacts.require("BaseDistributor");
+const DistributorFactory = artifacts.require("DistributorFactory");
 
-module.exports = function (deployer) {
+module.exports = function (deployer, network, accounts) {
+	deployer.deploy(Emitter);
+	deployer.deploy(BaseDistributor);
+	deployer.deploy(DistributorFactory);
+	if (network == "develop") return;
 	deployer.deploy(
 		Migrations,
 		// "0x745861AeD1EEe363b4AaA5F1994Be40b1e05Ff90",//Comment For Multitoken
