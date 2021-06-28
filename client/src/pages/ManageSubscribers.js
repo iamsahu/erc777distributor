@@ -26,13 +26,17 @@ const GET_RECEIVE_ADDRESS = gql`
 
 const GET_DOGS = gql`
 	query subscriberEntities($publisher: Bytes) {
-		subscriberEntities(where: { publisher: $publisher }) {
+		subscriberEntities(where: { publisher: $publisher, shares_gt: 0 }) {
 			id
 			subscriberAddress
 			index
 			publisher
 			timeStamp
 			shares
+			totalShares
+		}
+		subscription2S(where: { publisher: $publisher }) {
+			id
 			totalShares
 		}
 	}
@@ -68,7 +72,32 @@ function ManageSubscribers() {
 			})
 			.then((response) => {
 				console.log(response.data);
-				setdata(response.data.subscriberEntities);
+
+				const totalShares = response.data.subscription2S[0].totalShares;
+				var temp = [];
+				for (
+					let index = 0;
+					index < response.data.subscriberEntities.length;
+					index++
+				) {
+					let element = Object.assign(
+						{},
+						response.data.subscriberEntities[index]
+					);
+					// console.log(element);
+					element["shares"] =
+						(
+							(parseInt(response.data.subscriberEntities[index]["shares"]) /
+								parseInt(totalShares)) *
+							100
+						)
+							.toFixed(2)
+							.toString() + " %";
+					temp.push(element);
+				}
+				setdata(temp);
+
+				// setdata(response.data.subscriberEntities);
 			});
 	}
 
@@ -114,7 +143,11 @@ function ManageSubscribers() {
 		<Content
 			style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 		>
-			<Title> Manage Receivers</Title>
+			<Title>
+				{" "}
+				Manage Receivers{" "}
+				{selectedAddress === null ? <></> : "for " + selectedAddress.toString()}
+			</Title>
 			<Dropdown overlay={menu} trigger={["click"]}>
 				<a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
 					Click me <DownOutlined />
