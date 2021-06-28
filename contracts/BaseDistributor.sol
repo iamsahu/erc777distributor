@@ -307,8 +307,8 @@ contract BaseDistributor is IERC777Recipient,Initializable {
         modifySub(newUser, shareUnits);
         totalShareUnits += shareUnits;
         shareMapping[newUser] = shareUnits;
-        emitter.UserAdded2(newUser,shareUnits,INDEX_ID,address(this),block.timestamp,totalShareUnits);
-        emitter.TotalShares2(totalShareUnits,INDEX_ID,address(this),block.timestamp);
+        emitter.UserAdded2(newUser,shareUnits,INDEX_ID,address(this),block.timestamp,totalShareUnits,owner);
+        emitter.TotalShares2(totalShareUnits,INDEX_ID,address(this),block.timestamp,owner);
     }
 
     function modifyUser(address existingUser,uint128 sharePercentage) external onlyOwner{
@@ -319,8 +319,8 @@ contract BaseDistributor is IERC777Recipient,Initializable {
         totalShareUnits -= shareMapping[existingUser];//Need to handle case where shareMapping is larger than total share units
         totalShareUnits += shareUnits ;
         shareMapping[existingUser] = shareUnits;
-        emitter.UserModified2(existingUser,shareUnits,INDEX_ID,address(this),block.timestamp,totalShareUnits);
-        emitter.TotalShares2(totalShareUnits,INDEX_ID,address(this),block.timestamp);
+        emitter.UserModified2(existingUser,shareUnits,INDEX_ID,address(this),block.timestamp,totalShareUnits,owner);
+        emitter.TotalShares2(totalShareUnits,INDEX_ID,address(this),block.timestamp,owner);
     }
 
     function removeUser(address existingUser) external onlyOwner{
@@ -328,8 +328,8 @@ contract BaseDistributor is IERC777Recipient,Initializable {
         totalShareUnits -= shareMapping[existingUser];
         shareMapping[existingUser] = 0;
         modifySub(existingUser, 0);
-        emitter.UserRemoved2(existingUser,0,INDEX_ID,address(this),block.timestamp,totalShareUnits);//Changed the shareUnits to zero to read in the frontend the exit of the user
-        emitter.TotalShares2(totalShareUnits,INDEX_ID,address(this),block.timestamp);
+        emitter.UserRemoved2(existingUser,0,INDEX_ID,address(this),block.timestamp,totalShareUnits,owner);//Changed the shareUnits to zero to read in the frontend the exit of the user
+        emitter.TotalShares2(totalShareUnits,INDEX_ID,address(this),block.timestamp,owner);
     }
 
     /// @dev Distribute `amount` of cash among all token holders
@@ -350,7 +350,7 @@ contract BaseDistributor is IERC777Recipient,Initializable {
             ),
             new bytes(0) // user data
         );
-        emitter.Distribution2(actualCashAmount,INDEX_ID,address(this),block.timestamp,tokenNameMapping[tokenAddress]);
+        emitter.Distribution2(actualCashAmount,INDEX_ID,address(this),block.timestamp,tokenNameMapping[tokenAddress],owner);
     }
 
     function tokensReceived(
@@ -366,6 +366,6 @@ contract BaseDistributor is IERC777Recipient,Initializable {
         // do stuff
         totalDonations += amount;
         distribute(amount,msg.sender);
-        emitter.DonationReceived2( from, tokenNameMapping[msg.sender], amount,INDEX_ID,address(this),block.timestamp);
+        emitter.DonationReceived2( from, tokenNameMapping[msg.sender], amount,INDEX_ID,address(this),block.timestamp,owner);
     }
 }

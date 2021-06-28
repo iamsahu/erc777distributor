@@ -67,6 +67,6 @@ contract DistributorFactory is CloneFactory,Ownable{
     address clone = createClone(distributorContract);
     BaseDistributor(clone).initialize(_host,_ida,emitterAdd,msg.sender,_fDAIx,_fUSDCx,_fTUSDx,_ETHx,_erc1820Add);
     distributors.push(clone);
-    _emitter.AddressCreated2(clone,msg.sender);
+    _emitter.AddressCreated2(clone,msg.sender,block.timestamp);
   }
 }
