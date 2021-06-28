@@ -16,6 +16,7 @@ const GET_DOGS = gql`
 			receiveAddress
 			owner
 			timeStamp
+			name
 		}
 	}
 `;
@@ -30,7 +31,7 @@ function ManageAddresses() {
 
 	useEffect(() => {
 		if (!loading && data) {
-			// console.log(data);
+			console.log(data);
 			// const totalShares = data.subscription2S[0].totalShares;
 			// var temp = [];
 			// for (let index = 0; index < data.receiveAddresses.length; index++) {
@@ -66,6 +67,7 @@ function ManageAddresses() {
 			<Title> Manage Accounts</Title>
 			<AddAddress />
 			<Table dataSource={dataPoints}>
+				<Column title="Name" dataIndex="name" key="name" />
 				<Column
 					title="Address"
 					dataIndex="receiveAddress"

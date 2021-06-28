@@ -63,10 +63,10 @@ contract DistributorFactory is CloneFactory,Ownable{
     distributorContract = _libraryAddress;
   }
 
-  function createThing() public {
+  function createThing(string memory _name) public {
     address clone = createClone(distributorContract);
     BaseDistributor(clone).initialize(_host,_ida,emitterAdd,msg.sender,_fDAIx,_fUSDCx,_fTUSDx,_ETHx,_erc1820Add);
     distributors.push(clone);
-    _emitter.AddressCreated2(clone,msg.sender,block.timestamp);
+    _emitter.AddressCreated2(clone,msg.sender,block.timestamp,_name);
   }
 }

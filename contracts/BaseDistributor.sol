@@ -299,7 +299,7 @@ contract BaseDistributor is IERC777Recipient,Initializable {
          return x;
     }
 
-    function addUser(address newUser,uint128 sharePercentage) external onlyOwner{
+    function addUser(address newUser,uint128 sharePercentage,string memory _name) external onlyOwner{
         require(shareMapping[newUser]==0,"User already exists");
         require(sharePercentage>0,"Share Percentage should be greater than zero");
 
@@ -307,7 +307,7 @@ contract BaseDistributor is IERC777Recipient,Initializable {
         modifySub(newUser, shareUnits);
         totalShareUnits += shareUnits;
         shareMapping[newUser] = shareUnits;
-        emitter.UserAdded2(newUser,shareUnits,INDEX_ID,address(this),block.timestamp,totalShareUnits,owner);
+        emitter.UserAdded2(newUser,shareUnits,INDEX_ID,address(this),block.timestamp,totalShareUnits,owner,_name);
         emitter.TotalShares2(totalShareUnits,INDEX_ID,address(this),block.timestamp,owner);
     }
 

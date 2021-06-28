@@ -20,6 +20,7 @@ const GET_RECEIVE_ADDRESS = gql`
 			receiveAddress
 			owner
 			timeStamp
+			name
 		}
 	}
 `;
@@ -34,6 +35,7 @@ const GET_DOGS = gql`
 			timeStamp
 			shares
 			totalShares
+			name
 		}
 		subscription2S(where: { publisher: $publisher }) {
 			id
@@ -72,30 +74,33 @@ function ManageSubscribers() {
 			})
 			.then((response) => {
 				console.log(response.data);
-
-				const totalShares = response.data.subscription2S[0].totalShares;
-				var temp = [];
-				for (
-					let index = 0;
-					index < response.data.subscriberEntities.length;
-					index++
-				) {
-					let element = Object.assign(
-						{},
-						response.data.subscriberEntities[index]
-					);
-					// console.log(element);
-					element["shares"] =
-						(
-							(parseInt(response.data.subscriberEntities[index]["shares"]) /
-								parseInt(totalShares)) *
-							100
-						)
-							.toFixed(2)
-							.toString() + " %";
-					temp.push(element);
+				if (response.data !== undefined) {
+					let totalShares = 0;
+					if (response.data.subscription2S.length > 0)
+						totalShares = response.data.subscription2S[0].totalShares;
+					var temp = [];
+					for (
+						let index = 0;
+						index < response.data.subscriberEntities.length;
+						index++
+					) {
+						let element = Object.assign(
+							{},
+							response.data.subscriberEntities[index]
+						);
+						// console.log(element);
+						element["shares"] =
+							(
+								(parseInt(response.data.subscriberEntities[index]["shares"]) /
+									parseInt(totalShares)) *
+								100
+							)
+								.toFixed(2)
+								.toString() + " %";
+						temp.push(element);
+					}
+					setdata(temp);
 				}
-				setdata(temp);
 
 				// setdata(response.data.subscriberEntities);
 			});
@@ -159,6 +164,7 @@ function ManageSubscribers() {
 				<></>
 			)}
 			<Table dataSource={dataPoints}>
+				<Column title="Name" dataIndex="name" key="name" />
 				<Column
 					title="Address"
 					dataIndex="subscriberAddress"

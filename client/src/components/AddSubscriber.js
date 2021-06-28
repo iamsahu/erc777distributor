@@ -75,7 +75,7 @@ function AddSubscriber(props) {
 		// console.log(contract);
 		if (typeof contract !== undefined)
 			await contract
-				.addUser(values.address, values.shareUnits)
+				.addUser(values.address, values.shareUnits, values.name)
 				.then((response) => {
 					console.log(response);
 					setVisible(false);
@@ -129,6 +129,9 @@ function AddSubscriber(props) {
 							name="userForm"
 							onFinish={onFinish}
 						>
+							<Form.Item name="name" label="Name" rules={[{ required: true }]}>
+								<Input />
+							</Form.Item>
 							<Form.Item
 								name="address"
 								label="Address"

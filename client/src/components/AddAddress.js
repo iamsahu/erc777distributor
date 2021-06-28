@@ -59,14 +59,14 @@ function AddAddress() {
 
 	const onOk = () => {
 		setConfirmLoading(true);
-		RegisterSubsriber();
+		form.submit();
 	};
 
 	const onCancel = () => {
 		setVisible(false);
 	};
 
-	async function RegisterSubsriber() {
+	async function RegisterSubsriber(values) {
 		const contract = new Contract(
 			DistributorFactory.networks[web3React.chainId].address,
 			DistributorFactory.abi,
@@ -75,7 +75,7 @@ function AddAddress() {
 		// console.log(contract);
 		if (typeof contract !== undefined)
 			await contract
-				.createThing()
+				.createThing(values.name)
 				.then((response) => {
 					console.log(response);
 					setVisible(false);
@@ -122,7 +122,18 @@ function AddAddress() {
 						onOk={onOk}
 						onCancel={onCancel}
 						confirmLoading={confirmLoading}
-					></Modal>
+					>
+						<Form
+							form={form}
+							layout="vertical"
+							name="userForm"
+							onFinish={onFinish}
+						>
+							<Form.Item name="name" label="Name" rules={[{ required: true }]}>
+								<Input />
+							</Form.Item>
+						</Form>
+					</Modal>
 				</>
 			)}
 		</>
