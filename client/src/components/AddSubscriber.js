@@ -4,10 +4,10 @@ import { Form, Input, InputNumber, Modal, Button, notification } from "antd";
 // import { FormInstance } from "antd/lib/form";
 import { useWeb3React } from "@web3-react/core";
 import { Contract } from "@ethersproject/contracts";
-import ERC777Distributor from "../contracts/ERC777Distributor.json";
+import BaseDistributor from "../contracts/BaseDistributor.json";
 // import Web3Context from "../context/Web3Context";
 
-function AddSubscriber() {
+function AddSubscriber(props) {
 	// const details = useContext(Web3Context);
 	// const { accounts, contract, web3 } = details.current;
 	const web3React = useWeb3React();
@@ -20,7 +20,7 @@ function AddSubscriber() {
 	const openNotification = () => {
 		notification["success"]({
 			message: "Success!",
-			description: "Beneficiary added successfully!",
+			description: "Receiver added successfully!",
 			duration: 2.5,
 			onClick: () => {
 				console.log("Notification Clicked!");
@@ -31,7 +31,7 @@ function AddSubscriber() {
 	const openFailNotification = () => {
 		notification["error"]({
 			message: "Fail!",
-			description: "Beneficiary addition failed!",
+			description: "Receiver addition failed!",
 			duration: 2.5,
 			onClick: () => {
 				console.log("Notification Clicked!");
@@ -68,8 +68,8 @@ function AddSubscriber() {
 
 	async function RegisterSubsriber(values) {
 		const contract = new Contract(
-			ERC777Distributor.networks[web3React.chainId].address,
-			ERC777Distributor.abi,
+			props.address,
+			BaseDistributor.abi,
 			web3React.library.getSigner()
 		);
 		// console.log(contract);
@@ -114,10 +114,10 @@ function AddSubscriber() {
 			{web3React.active && (
 				<>
 					<Button type="primary" onClick={showModal}>
-						Add a beneficiary
+						Add a receiver
 					</Button>
 					<Modal
-						title="Add a subsriber"
+						title="Add a receiver"
 						visible={visible}
 						onOk={onOk}
 						onCancel={onCancel}

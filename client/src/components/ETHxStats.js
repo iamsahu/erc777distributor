@@ -43,7 +43,7 @@ function ETHxStats() {
 		<div className="site-statistic-demo-card">
 			<Card>
 				<Statistic
-					title="Donations Received in ETHx"
+					title="Funds Received in ETHx"
 					value={val}
 					// precision={2}
 					valueStyle={{ color: "#3f8600" }}

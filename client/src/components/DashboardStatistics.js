@@ -9,9 +9,11 @@ import DAIxStats from "./DAIxStats";
 import BeneficiaryCount from "./BeneficiaryCount";
 import { BigNumber } from "@ethersproject/bignumber";
 import { formatEther } from "@ethersproject/units";
+import { useWeb3React } from "@web3-react/core";
+
 const GET_DOGS = gql`
-	query GetDogs {
-		donations {
+	query GetDogs($owner: Bytes) {
+		donations(where: { owner: $owner }) {
 			token
 			id
 			index
@@ -21,7 +23,12 @@ const GET_DOGS = gql`
 `;
 
 function DashboardStatistics() {
-	const { loading, error, data } = useQuery(GET_DOGS);
+	const web3React = useWeb3React();
+	const { loading, error, data } = useQuery(GET_DOGS, {
+		variables: {
+			owner: web3React.account,
+		},
+	});
 	const [val, setVal] = useState("0");
 
 	useEffect(() => {
@@ -35,7 +42,7 @@ function DashboardStatistics() {
 				// console.log(formatEther(value));
 				setVal(formatEther(value).toString());
 			}
-			calculateTotalDonation();
+			if (data !== undefined) calculateTotalDonation();
 		}
 	}, [loading, data]);
 

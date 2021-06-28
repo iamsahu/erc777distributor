@@ -43,7 +43,7 @@ function DAIxStats() {
 		<div className="site-statistic-demo-card">
 			<Card>
 				<Statistic
-					title="Donations Received in DAIx"
+					title="Funds Received in DAIx"
 					value={val}
 					// precision={2}
 					valueStyle={{ color: "#3f8600" }}

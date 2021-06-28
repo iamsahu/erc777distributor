@@ -7,6 +7,7 @@ import Dashboard from "./pages/Dashboard";
 import ManageSubscribers from "./pages/ManageSubscribers";
 import TimeLine from "./pages/TimeLine";
 import Web3Context from "./context/Web3Context";
+import ManageAddresses from "./pages/ManageAddresses";
 import ERC777Distributor from "./contracts/ERC777Distributor.json";
 import "./App.css";
 
@@ -15,6 +16,7 @@ import {
 	AreaChartOutlined,
 	DatabaseOutlined,
 	FieldTimeOutlined,
+	UnorderedListOutlined,
 } from "@ant-design/icons";
 import { Typography } from "antd";
 
@@ -187,6 +189,7 @@ function App() {
 				setcurrentUI(<TimeLine />);
 				break;
 			case "4":
+				setcurrentUI(<ManageAddresses />);
 				// setcurrentUI(<Borrow />);
 				break;
 			case "5":
@@ -244,6 +247,13 @@ function App() {
 									Manage
 								</Menu.Item>
 								<Menu.Item
+									key="4"
+									icon={<UnorderedListOutlined />}
+									onClick={onItemClick}
+								>
+									Manage Accounts
+								</Menu.Item>
+								<Menu.Item
 									key="3"
 									icon={<FieldTimeOutlined />}
 									onClick={onItemClick}
@@ -262,7 +272,7 @@ function App() {
 								</div>
 							</Content>
 							<Footer style={{ textAlign: "center" }}>
-								ERC777 Donation Distributor ©2021 Created by{" "}
+								ERC777 Funds Distributor ©2021 Created by{" "}
 								<Link href="https://twitter.com/themystery" target="_blank">
 									Prafful Sahu
 								</Link>

@@ -4,7 +4,7 @@ import { Modal, Button, notification } from "antd";
 // import { FormInstance } from "antd/lib/form";
 import { useWeb3React } from "@web3-react/core";
 import { Contract } from "@ethersproject/contracts";
-import ERC777Distributor from "../contracts/ERC777Distributor.json";
+import BaseDistributor from "../contracts/BaseDistributor.json";
 
 function RemoveSubscriber(props) {
 	const web3React = useWeb3React();
@@ -63,8 +63,8 @@ function RemoveSubscriber(props) {
 
 	async function removeSubscriber(values) {
 		const contract = new Contract(
-			ERC777Distributor.networks[web3React.chainId].address,
-			ERC777Distributor.abi,
+			props.selectedAddress,
+			BaseDistributor.abi,
 			web3React.library.getSigner()
 		);
 

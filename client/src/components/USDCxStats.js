@@ -44,7 +44,7 @@ function USDCxStats() {
 		<div className="site-statistic-demo-card">
 			<Card>
 				<Statistic
-					title="Donations Received in USDCx"
+					title="Funds Received in USDCx"
 					value={val}
 					// precision={2}
 					valueStyle={{ color: "#3f8600" }}

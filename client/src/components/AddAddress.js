@@ -1,14 +1,17 @@
 import React from "react";
-import { Form, InputNumber, Modal, Button, notification } from "antd";
+import { Form, Input, InputNumber, Modal, Button, notification } from "antd";
 // import { SmileOutlined, UserOutlined } from "@ant-design/icons";
 // import { FormInstance } from "antd/lib/form";
 import { useWeb3React } from "@web3-react/core";
 import { Contract } from "@ethersproject/contracts";
-import BaseDistributor from "../contracts/BaseDistributor.json";
+import DistributorFactory from "../contracts/DistributorFactory.json";
+// import Web3Context from "../context/Web3Context";
 
-function ModifySubscriber(props) {
+function AddAddress() {
+	// const details = useContext(Web3Context);
+	// const { accounts, contract, web3 } = details.current;
 	const web3React = useWeb3React();
-	// console.log(props);
+	// console.log(web3React);
 	const [visible, setVisible] = React.useState(false);
 	const [confirmLoading, setConfirmLoading] = React.useState(false);
 
@@ -17,7 +20,7 @@ function ModifySubscriber(props) {
 	const openNotification = () => {
 		notification["success"]({
 			message: "Success!",
-			description: "The share modification worked successfully!",
+			description: "Beneficiary added successfully!",
 			duration: 2.5,
 			onClick: () => {
 				console.log("Notification Clicked!");
@@ -28,7 +31,7 @@ function ModifySubscriber(props) {
 	const openFailNotification = () => {
 		notification["error"]({
 			message: "Fail!",
-			description: "The share modification was unsuccessfull!",
+			description: "Beneficiary addition failed!",
 			duration: 2.5,
 			onClick: () => {
 				console.log("Notification Clicked!");
@@ -56,37 +59,36 @@ function ModifySubscriber(props) {
 
 	const onOk = () => {
 		setConfirmLoading(true);
-		form.submit();
+		RegisterSubsriber();
 	};
 
 	const onCancel = () => {
 		setVisible(false);
 	};
 
-	async function modifySubscriber(values) {
+	async function RegisterSubsriber() {
 		const contract = new Contract(
-			props.selectedAddress,
-			BaseDistributor.abi,
+			DistributorFactory.networks[web3React.chainId].address,
+			DistributorFactory.abi,
 			web3React.library.getSigner()
 		);
 		// console.log(contract);
-		// if (typeof contract !== undefined)
-		console.log(props);
-		await contract
-			.modifyUser(props.userAddress, values.shareUnits)
-			.then((response) => {
-				console.log(response);
-				setVisible(false);
-				setConfirmLoading(false);
-				openNotification();
-			})
-			.catch((error) => {
-				setVisible(false);
-				setConfirmLoading(false);
-				console.log(error.message);
-				openFailNotification();
-			});
-		// .send({ from: web3React.account })
+		if (typeof contract !== undefined)
+			await contract
+				.createThing()
+				.then((response) => {
+					console.log(response);
+					setVisible(false);
+					setConfirmLoading(false);
+					openNotification();
+				})
+				.catch((error) => {
+					setVisible(false);
+					setConfirmLoading(false);
+					console.log(error.message);
+					openFailNotification();
+				});
+
 		// .on("confirmation", function (confirmationNumber, receipt) {
 		// 	console.log(confirmationNumber);
 		// 	console.log(receipt);
@@ -102,46 +104,29 @@ function ModifySubscriber(props) {
 	const onFinish = async (values) => {
 		console.log("Success:", values);
 		//TO DO: Add function to fire a query to handle addition of subscriber data.
-		await modifySubscriber(values);
+		await RegisterSubsriber(values);
 		// setVisible(false);
 		// setConfirmLoading(false);
 	};
-	const existShare = "Existing share: " + props.currentShare;
 
 	return (
 		<>
 			{web3React.active && (
 				<>
 					<Button type="primary" onClick={showModal}>
-						Modify share percentage
+						Create a new account
 					</Button>
 					<Modal
-						title="Modify beneficiary share percentage."
+						title="Create a new receiving account?"
 						visible={visible}
 						onOk={onOk}
 						onCancel={onCancel}
 						confirmLoading={confirmLoading}
-					>
-						{existShare}
-						<Form
-							form={form}
-							layout="vertical"
-							name="userForm"
-							onFinish={onFinish}
-						>
-							<Form.Item
-								name="shareUnits"
-								label="New Share %"
-								rules={[{ required: true }]}
-							>
-								<InputNumber />
-							</Form.Item>
-						</Form>
-					</Modal>
+					></Modal>
 				</>
 			)}
 		</>
 	);
 }
 
-export default ModifySubscriber;
+export default AddAddress;
