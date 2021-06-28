@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 pragma experimental ABIEncoderV2;
 
@@ -5,9 +6,7 @@ import './Emitter.sol';
 
 import {
     ISuperfluid,
-    ISuperToken,
-    SuperAppBase,
-    SuperAppDefinitions
+    ISuperToken
 } from "@superfluid-finance/ethereum-contracts/contracts/apps/SuperAppBase.sol";
 //from "https://github.com/superfluid-finance/protocol-monorepo/blob/remix-support/packages/ethereum-contracts/contracts/apps/SuperAppBase.sol";
 import {
@@ -22,7 +21,7 @@ import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 
 
 
-contract BaseDistributor is IERC777Recipient,SuperAppBase,Initializable {
+contract BaseDistributor is IERC777Recipient,Initializable {
     Emitter emitter;
     uint256 public totalDonations=0;
     uint128 public totalShareUnits=0;
@@ -57,20 +56,21 @@ contract BaseDistributor is IERC777Recipient,SuperAppBase,Initializable {
     // event TotalShares(uint128 totalShares,uint32 index,address publisher,uint timeStamp);
 
     function initialize (
-        ISuperfluid host,
-        IInstantDistributionAgreementV1 ida,
+        address host,
+        address ida,
         address emitterAdd,
         address _owner,
         address _fDAIx,
         address _fUSDCx,
         address _fTUSDx,
-        
+        address _ETHx,
         address _erc1820Add
-        ) public {
-
+        ) public initializer{
+        
         emitter = Emitter(emitterAdd);
         owner = _owner;
         _erc1820 = IERC1820Registry(_erc1820Add);
+        _erc1820.setInterfaceImplementer(address(this), TOKENS_RECIPIENT_INTERFACE_HASH, address(this));
         // transferOwnership(_owner);
         
 
@@ -83,24 +83,16 @@ contract BaseDistributor is IERC777Recipient,SuperAppBase,Initializable {
          fTUSDx = ISuperToken(_fTUSDx);
         tokenNameMapping[_fTUSDx] = "fTUSDx";
 
-        //  ETHx = ISuperToken(_ETHx);
-        // tokenNameMapping[_ETHx] = "ETHx";
+         ETHx = ISuperToken(_ETHx);
+        tokenNameMapping[_ETHx] = "ETHx";
 
         
-        _host = host;
-        _ida = ida;
-    }
+        _host = ISuperfluid(host);
+        _ida = IInstantDistributionAgreementV1(ida);
+    // }
 
-    function initalize2() external onlyOwner{
-        _erc1820.setInterfaceImplementer(address(this), TOKENS_RECIPIENT_INTERFACE_HASH, address(this));
+    // function initalize2() external onlyOwner{
 
-        uint256 configWord =
-            SuperAppDefinitions.APP_LEVEL_FINAL |
-            SuperAppDefinitions.BEFORE_AGREEMENT_TERMINATED_NOOP |
-            SuperAppDefinitions.AFTER_AGREEMENT_TERMINATED_NOOP;
-
-        _host.registerApp(configWord);
-        //How would the below methods change with proxy/cloning? How would initialization of superapp change
         _host.callAgreement(
             _ida,
             abi.encodeWithSelector(
@@ -134,16 +126,16 @@ contract BaseDistributor is IERC777Recipient,SuperAppBase,Initializable {
             new bytes(0) // user data
         );
 
-        // _host.callAgreement(
-        //     _ida,
-        //     abi.encodeWithSelector(
-        //         _ida.createIndex.selector,
-        //         ETHx,
-        //         INDEX_ID,
-        //         new bytes(0) // placeholder ctx
-        //     ),
-        //     new bytes(0) // user data
-        // );
+        _host.callAgreement(
+            _ida,
+            abi.encodeWithSelector(
+                _ida.createIndex.selector,
+                ETHx,
+                INDEX_ID,
+                new bytes(0) // placeholder ctx
+            ),
+            new bytes(0) // user data
+        );
     }
 
     modifier onlyOwner(){
@@ -155,65 +147,65 @@ contract BaseDistributor is IERC777Recipient,SuperAppBase,Initializable {
         return shareMapping[user];
     }
 
-    function beforeAgreementCreated(
-        ISuperToken superToken,
-        address agreementClass,
-        bytes32 /* agreementId */,
-        bytes calldata /*agreementData*/,
-        bytes calldata /*ctx*/
-    )
-        external view override
-        returns (bytes memory data)
-    {
-        // require(superToken == _cashToken, "DRT: Unsupported cash token");
-        require(agreementClass == address(_ida), "DRT: Unsupported agreement");
-        return new bytes(0);
-    }
+    // function beforeAgreementCreated(
+    //     ISuperToken superToken,
+    //     address agreementClass,
+    //     bytes32 /* agreementId */,
+    //     bytes calldata /*agreementData*/,
+    //     bytes calldata /*ctx*/
+    // )
+    //     external view override
+    //     returns (bytes memory data)
+    // {
+    //     // require(superToken == _cashToken, "DRT: Unsupported cash token");
+    //     require(agreementClass == address(_ida), "DRT: Unsupported agreement");
+    //     return new bytes(0);
+    // }
 
-    function afterAgreementCreated(
-        ISuperToken superToken,
-        address /* agreementClass */,
-        bytes32 agreementId,
-        bytes calldata /*agreementData*/,
-        bytes calldata /*cbdata*/,
-        bytes calldata ctx
-    )
-        external override
-        returns(bytes memory newCtx)
-    {
-        _checkSubscription(superToken, ctx, agreementId);
-        newCtx = ctx;
-    }
+    // function afterAgreementCreated(
+    //     ISuperToken superToken,
+    //     address /* agreementClass */,
+    //     bytes32 agreementId,
+    //     bytes calldata /*agreementData*/,
+    //     bytes calldata /*cbdata*/,
+    //     bytes calldata ctx
+    // )
+    //     external override
+    //     returns(bytes memory newCtx)
+    // {
+    //     _checkSubscription(superToken, ctx, agreementId);
+    //     newCtx = ctx;
+    // }
 
-    function beforeAgreementUpdated(
-        ISuperToken superToken,
-        address agreementClass,
-        bytes32 /* agreementId */,
-        bytes calldata /*agreementData*/,
-        bytes calldata /*ctx*/
-    )
-        external view override
-        returns (bytes memory data)
-    {
-        // require(superToken == _cashToken, "DRT: Unsupported cash token");
-        require(agreementClass == address(_ida), "DRT: Unsupported agreement");
-        return new bytes(0);
-    }
+    // function beforeAgreementUpdated(
+    //     ISuperToken superToken,
+    //     address agreementClass,
+    //     bytes32 /* agreementId */,
+    //     bytes calldata /*agreementData*/,
+    //     bytes calldata /*ctx*/
+    // )
+    //     external view override
+    //     returns (bytes memory data)
+    // {
+    //     // require(superToken == _cashToken, "DRT: Unsupported cash token");
+    //     require(agreementClass == address(_ida), "DRT: Unsupported agreement");
+    //     return new bytes(0);
+    // }
 
-    function afterAgreementUpdated(
-        ISuperToken superToken,
-        address /* agreementClass */,
-        bytes32 agreementId,
-        bytes calldata /*agreementData*/,
-        bytes calldata /*cbdata*/,
-        bytes calldata ctx
-    )
-        external override
-        returns(bytes memory newCtx)
-    {
-        _checkSubscription(superToken, ctx, agreementId);
-        newCtx = ctx;
-    }
+    // function afterAgreementUpdated(
+    //     ISuperToken superToken,
+    //     address /* agreementClass */,
+    //     bytes32 agreementId,
+    //     bytes calldata /*agreementData*/,
+    //     bytes calldata /*cbdata*/,
+    //     bytes calldata ctx
+    // )
+    //     external override
+    //     returns(bytes memory newCtx)
+    // {
+    //     _checkSubscription(superToken, ctx, agreementId);
+    //     newCtx = ctx;
+    // }
 
     function _checkSubscription(
         ISuperToken superToken,
@@ -370,7 +362,7 @@ contract BaseDistributor is IERC777Recipient,SuperAppBase,Initializable {
         bytes calldata operatorData
     ) external override {
         //require(msg.sender == address(_token), "Simple777Recipient: Invalid token");
-
+        require((msg.sender==address(fDAIx))||(msg.sender==address(fDAIx))||(msg.sender==address(fDAIx))||(msg.sender==address(fDAIx)),"Can only accept ERC777 tokens");
         // do stuff
         totalDonations += amount;
         distribute(amount,msg.sender);

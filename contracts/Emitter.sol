@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: UNLICENSED
 pragma solidity ^0.8.0;
 
 contract Emitter{
@@ -7,6 +8,7 @@ contract Emitter{
     event UserModified(address userAddress,uint128 shares,uint32 index,address publisher,uint timeStamp,uint128 totalShares);
     event Distribution(uint256 amountDistributed,uint32 index,address publisher,uint timeStamp,string token);
     event TotalShares(uint128 totalShares,uint32 index,address publisher,uint timeStamp);
+    event AddressCreated(address _address,address owner);
     
     function DonationReceived2(address from, string memory token, uint256 amount,uint32 index,address publisher,uint timeStamp) external {
         emit DonationReceived(from, token, amount,index,publisher,timeStamp);
@@ -25,6 +27,10 @@ contract Emitter{
     }
     function TotalShares2(uint128 totalShares,uint32 index,address publisher,uint timeStamp) external {
         emit TotalShares(totalShares,index,publisher,timeStamp);
+    }
+
+    function AddressCreated2(address _address,address owner) external{
+        emit AddressCreated(_address, owner);
     }
     
 }

@@ -123,6 +123,7 @@ contract("DistributorFactory", (accounts) => {
 			// console.log(appInitialBalance);
 			await _distributorFactory.EmitterAddress(_emitter.address);
 			await _distributorFactory.setDistributorAddress(_baseDistributor.address);
+			console.log();
 			let temp = await _distributorFactory.createThing(
 				sf.host.address,
 				sf.agreements.ida.address,
@@ -143,6 +144,12 @@ contract("DistributorFactory", (accounts) => {
 			console.log(typeof contractInstance);
 			try {
 				let te = await contractInstance.initalize2();
+				console.log("Initialization Successful!");
+				await contractInstance.addUser(
+					"0xfb260c24D26fD9beec059Ebf4E08a6Fc81924350",
+					10,
+					{ from: accounts[0] }
+				);
 				// console.log(te);
 			} catch (error) {
 				console.log(error.message);
