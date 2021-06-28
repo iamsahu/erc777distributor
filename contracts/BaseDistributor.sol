@@ -362,7 +362,7 @@ contract BaseDistributor is IERC777Recipient,Initializable {
         bytes calldata operatorData
     ) external override {
         //require(msg.sender == address(_token), "Simple777Recipient: Invalid token");
-        require((msg.sender==address(fDAIx))||(msg.sender==address(fDAIx))||(msg.sender==address(fDAIx))||(msg.sender==address(fDAIx)),"Can only accept ERC777 tokens");
+        require((msg.sender==address(fDAIx))||(msg.sender==address(fUSDCx))||(msg.sender==address(fTUSDx))||(msg.sender==address(ETHx)),"Can only accept ERC777 tokens");
         // do stuff
         totalDonations += amount;
         distribute(amount,msg.sender);
