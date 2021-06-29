@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Tabs, Typography, Layout, Divider, Menu, Dropdown } from "antd";
-import { Table, Tag, Space } from "antd";
+import { Typography, Layout, Menu, Dropdown } from "antd";
+import { Table, Space } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import AddSubscriber from "../components/AddSubscriber";
 import ModifySubscriber from "../components/ModifySubscriber";
@@ -11,9 +11,7 @@ import { gql, useQuery } from "@apollo/client";
 import { client } from "../index";
 
 const { Content } = Layout;
-const { Text, Title } = Typography;
-
-const { Column, ColumnGroup } = Table;
+const { Title, Paragraph } = Typography;
 
 const GET_RECEIVE_ADDRESS = gql`
 	query receiveAddresses($owner: Bytes) {
@@ -26,6 +24,69 @@ const GET_RECEIVE_ADDRESS = gql`
 		}
 	}
 `;
+
+const columns2 = [
+	{
+		title: "Name",
+		dataIndex: "name",
+		key: "name",
+		render: (text) => <>{text}</>,
+	},
+	{
+		title: "Address",
+		dataIndex: "subscriberAddress",
+		key: "subscriberAddress",
+		render: (text) => <Paragraph copyable>{text}</Paragraph>,
+	},
+];
+
+const columns = [
+	{
+		title: "Name",
+		dataIndex: "name",
+		key: "name",
+		render: (text) => <>{text}</>,
+	},
+	{
+		title: "Address",
+		dataIndex: "subscriberAddress",
+		key: "subscriberAddress",
+		render: (text) => <Paragraph copyable>{text}</Paragraph>,
+	},
+	{
+		title: "Shares",
+		dataIndex: "shares",
+		key: "shares",
+		render: (text) => <>{text}</>,
+	},
+	{
+		title: "Action",
+		key: "action",
+		render: (text, record) => {
+			// console.log(record);
+			return (
+				<Space size="middle">
+					<ModifySubscriber
+						userAddress={record.subscriberAddress}
+						currentShare={record.shares}
+						selectedAddress={record.publisher}
+					/>
+					<ModifyReceiverName
+						userAddress={record.subscriberAddress}
+						index={record.index}
+						publisher={record.publisher}
+						owner={record.owner}
+						name={record.name}
+					/>
+					<RemoveSubscriber
+						userAddress={record.subscriberAddress}
+						selectedAddress={record.publisher}
+					/>
+				</Space>
+			);
+		},
+	},
+];
 
 const GET_DOGS = gql`
 	query subscriberEntities($publisher: Bytes) {
@@ -126,22 +187,6 @@ function ManageSubscribers() {
 				</Menu.Item>
 			));
 			setMenu(<Menu>{temp}</Menu>);
-			// const totalShares = data.subscription2S[0].totalShares;
-			// var temp = [];
-			// for (let index = 0; index < data.subscriberEntities.length; index++) {
-			// 	let element = Object.assign({}, data.subscriberEntities[index]);
-			// 	// console.log(element);
-			// 	element["shares"] =
-			// 		(
-			// 			(parseInt(data.subscriberEntities[index]["shares"]) /
-			// 				parseInt(totalShares)) *
-			// 			100
-			// 		)
-			// 			.toFixed(2)
-			// 			.toString() + " %";
-			// 	temp.push(element);
-			// }
-			// setdata(temp);
 		}
 	}, [loading]);
 
@@ -161,55 +206,22 @@ function ManageSubscribers() {
 			<Title>
 				{" "}
 				Manage Receivers {projectName === null ? <></> : "for " + projectName}
-			</Title>
+			</Title>{" "}
+			{/* <Paragraph copyable>{selectedAddress}</Paragraph> */}
 			<Dropdown overlay={menu} trigger={["click"]}>
 				<a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
 					Click me <DownOutlined />
 				</a>
-			</Dropdown>
+			</Dropdown>{" "}
 			{selectedAddress !== null ? (
 				<AddSubscriber address={selectedAddress} />
 			) : (
 				<></>
 			)}
-			<Table dataSource={dataPoints}>
-				<Column title="Name" dataIndex="name" key="name" />
-				<Column
-					title="Address"
-					dataIndex="subscriberAddress"
-					key="subscriberAddress"
-				/>
-				<Column title="Share" dataIndex="shares" key="shares" />
-				{web3React.active && (
-					<Column
-						title="Action"
-						key="action"
-						render={(text, record) => {
-							// console.log(record);
-							return (
-								<Space size="middle">
-									<ModifySubscriber
-										userAddress={record.subscriberAddress}
-										currentShare={record.shares}
-										selectedAddress={selectedAddress}
-									/>
-									<ModifyReceiverName
-										userAddress={record.subscriberAddress}
-										index={record.index}
-										publisher={record.publisher}
-										owner={record.owner}
-										name={record.name}
-									/>
-									<RemoveSubscriber
-										userAddress={record.subscriberAddress}
-										selectedAddress={selectedAddress}
-									/>
-								</Space>
-							);
-						}}
-					/>
-				)}
-			</Table>
+			<Table
+				dataSource={dataPoints}
+				columns={web3React.active ? columns : columns}
+			/>
 		</Content>
 	);
 }

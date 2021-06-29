@@ -17,6 +17,9 @@ const GET_donations = gql`
 			timeStamp
 			from
 			publisher
+			subscription {
+				name
+			}
 		}
 	}
 `;
@@ -45,7 +48,7 @@ function DonationsTimeline() {
 		console.log(error.message);
 		return <div>SOmething went wrong</div>;
 	}
-
+	console.log(data);
 	return (
 		<Content
 			style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
@@ -59,7 +62,7 @@ function DonationsTimeline() {
 						Received an amount of{" "}
 						{formatEther(BigNumber.from(record.donation)).toString()}{" "}
 						{record.token} on {timeConverter(record.timeStamp)} from{" "}
-						{record.from.toString()} in {record.publisher}
+						{record.from.toString()} in {record.subscription.name}
 					</Timeline.Item>
 				))}
 				{/* <Timeline.Item>

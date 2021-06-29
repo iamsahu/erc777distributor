@@ -5,8 +5,9 @@ import AddAddress from "../components/AddAddress";
 import { useWeb3React } from "@web3-react/core";
 import { gql, useQuery } from "@apollo/client";
 import ModifyAddressName from "../components/ModifyAddressName";
+import { timeConverter } from "../helpers/HelperFunctions";
 const { Content } = Layout;
-const { Text, Title } = Typography;
+const { Text, Title, Paragraph } = Typography;
 
 const { Column, ColumnGroup } = Table;
 
@@ -21,6 +22,42 @@ const GET_DOGS = gql`
 		}
 	}
 `;
+
+const columns = [
+	{
+		title: "Name",
+		dataIndex: "name",
+		key: "name",
+	},
+	{
+		title: "Address",
+		dataIndex: "receiveAddress",
+		key: "receiveAddress",
+		render: (text) => <Paragraph copyable>{text}</Paragraph>,
+	},
+	{
+		title: "Created Time",
+		dataIndex: "timeStamp",
+		key: "timeStamp",
+		render: (text) => <>{timeConverter(text)}</>,
+	},
+	{
+		title: "Action",
+		key: "action",
+		render: (text, record) => {
+			// console.log(record);
+			return (
+				<Space size="middle">
+					<ModifyAddressName
+						address={record.receiveAddress}
+						owner={record.owner}
+						name={record.name}
+					/>
+				</Space>
+			);
+		},
+	},
+];
 
 function ManageAddresses() {
 	const web3React = useWeb3React();
@@ -67,8 +104,8 @@ function ManageAddresses() {
 		>
 			<Title> Manage Accounts</Title>
 			<AddAddress />
-			<Table dataSource={dataPoints}>
-				<Column title="Name" dataIndex="name" key="name" />
+			<Table dataSource={dataPoints} columns={columns}>
+				{/* <Column title="Name" dataIndex="name" key="name" />
 				<Column
 					title="Address"
 					dataIndex="receiveAddress"
@@ -92,7 +129,7 @@ function ManageAddresses() {
 							);
 						}}
 					/>
-				)}
+				)} */}
 			</Table>
 		</Content>
 	);

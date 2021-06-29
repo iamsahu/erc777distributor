@@ -173,7 +173,7 @@ function App() {
 	}
 
 	function onCollapse(collapse) {
-		// setCollapsed(collapse);
+		setCollapsed(collapse);
 	}
 
 	function onItemClick(item) {

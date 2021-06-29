@@ -1,5 +1,5 @@
 import React from "react";
-import { Form, Input, InputNumber, Modal, Button, notification } from "antd";
+import { Form, Input, Modal, Button, notification } from "antd";
 // import { SmileOutlined, UserOutlined } from "@ant-design/icons";
 // import { FormInstance } from "antd/lib/form";
 import { useWeb3React } from "@web3-react/core";
