@@ -5,9 +5,11 @@ import { DownOutlined } from "@ant-design/icons";
 import AddSubscriber from "../components/AddSubscriber";
 import ModifySubscriber from "../components/ModifySubscriber";
 import RemoveSubscriber from "../components/RemoveSubscriber";
+import ModifyReceiverName from "../components/ModifyReceiverName";
 import { useWeb3React } from "@web3-react/core";
 import { gql, useQuery } from "@apollo/client";
 import { client } from "../index";
+
 const { Content } = Layout;
 const { Text, Title } = Typography;
 
@@ -36,6 +38,7 @@ const GET_DOGS = gql`
 			shares
 			totalShares
 			name
+			owner
 		}
 		subscription2S(where: { publisher: $publisher }) {
 			id
@@ -46,24 +49,27 @@ const GET_DOGS = gql`
 
 function ManageSubscribers() {
 	const web3React = useWeb3React();
+	const [dataPoints, setdata] = useState([]);
+	const [projectName, setProjectName] = useState(null);
+	const [menu, setMenu] = useState(<Menu></Menu>);
+	const [selectedAddress, setSelectedAddress] = useState(null);
 
 	const { loading, error, data } = useQuery(GET_RECEIVE_ADDRESS, {
 		variables: {
 			owner: web3React.account,
 		},
 	});
-	const [dataPoints, setdata] = useState([]);
-	const [menu, setMenu] = useState(<Menu></Menu>);
-	const [selectedAddress, setSelectedAddress] = useState(null);
 
 	function onItemClick(item) {
-		console.log(item);
+		// console.log(item);
 		LoadBeneficiaries(item.key);
 		setSelectedAddress(item.key);
+		// console.log(item.item.props);
+		setProjectName(item.item.props.name);
 	}
 
 	async function LoadBeneficiaries(of) {
-		console.log(of);
+		// console.log(of);
 		setdata([]);
 		await client
 			.query({
@@ -73,7 +79,7 @@ function ManageSubscribers() {
 				},
 			})
 			.then((response) => {
-				console.log(response.data);
+				// console.log(response.data);
 				if (response.data !== undefined) {
 					let totalShares = 0;
 					if (response.data.subscription2S.length > 0)
@@ -108,11 +114,15 @@ function ManageSubscribers() {
 
 	useEffect(() => {
 		if (!loading && data) {
-			console.log(data);
+			// console.log(data);
 			for (let index = 0; index < data.receiveAddresses.length; index++) {}
 			const temp = data.receiveAddresses.map((item) => (
-				<Menu.Item key={item.receiveAddress} onClick={onItemClick}>
-					{item.receiveAddress}
+				<Menu.Item
+					key={item.receiveAddress}
+					name={item.name}
+					onClick={onItemClick}
+				>
+					{item.name}
 				</Menu.Item>
 			));
 			setMenu(<Menu>{temp}</Menu>);
@@ -150,8 +160,7 @@ function ManageSubscribers() {
 		>
 			<Title>
 				{" "}
-				Manage Receivers{" "}
-				{selectedAddress === null ? <></> : "for " + selectedAddress.toString()}
+				Manage Receivers {projectName === null ? <></> : "for " + projectName}
 			</Title>
 			<Dropdown overlay={menu} trigger={["click"]}>
 				<a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>
@@ -176,13 +185,20 @@ function ManageSubscribers() {
 						title="Action"
 						key="action"
 						render={(text, record) => {
-							console.log(record);
+							// console.log(record);
 							return (
 								<Space size="middle">
 									<ModifySubscriber
 										userAddress={record.subscriberAddress}
 										currentShare={record.shares}
 										selectedAddress={selectedAddress}
+									/>
+									<ModifyReceiverName
+										userAddress={record.subscriberAddress}
+										index={record.index}
+										publisher={record.publisher}
+										owner={record.owner}
+										name={record.name}
 									/>
 									<RemoveSubscriber
 										userAddress={record.subscriberAddress}

@@ -4,6 +4,7 @@ import { Table, Tag, Space } from "antd";
 import AddAddress from "../components/AddAddress";
 import { useWeb3React } from "@web3-react/core";
 import { gql, useQuery } from "@apollo/client";
+import ModifyAddressName from "../components/ModifyAddressName";
 const { Content } = Layout;
 const { Text, Title } = Typography;
 
@@ -23,7 +24,7 @@ const GET_DOGS = gql`
 
 function ManageAddresses() {
 	const web3React = useWeb3React();
-	console.log(web3React.account);
+	// console.log(web3React.account);
 	const { loading, error, data } = useQuery(GET_DOGS, {
 		variables: { owner: web3React.account },
 	});
@@ -31,7 +32,7 @@ function ManageAddresses() {
 
 	useEffect(() => {
 		if (!loading && data) {
-			console.log(data);
+			// console.log(data);
 			// const totalShares = data.subscription2S[0].totalShares;
 			// var temp = [];
 			// for (let index = 0; index < data.receiveAddresses.length; index++) {
@@ -73,7 +74,25 @@ function ManageAddresses() {
 					dataIndex="receiveAddress"
 					key="receiveAddress"
 				/>
-				<Column title="Time" dataIndex="timeStamp" key="timeStamp" />
+				<Column title="Created Time" dataIndex="timeStamp" key="timeStamp" />
+				{web3React.active && (
+					<Column
+						title="Action"
+						key="action"
+						render={(text, record) => {
+							// console.log(record);
+							return (
+								<Space size="middle">
+									<ModifyAddressName
+										address={record.receiveAddress}
+										owner={record.owner}
+										name={record.name}
+									/>
+								</Space>
+							);
+						}}
+					/>
+				)}
 			</Table>
 		</Content>
 	);
