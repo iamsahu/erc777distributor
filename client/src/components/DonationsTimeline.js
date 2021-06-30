@@ -6,7 +6,7 @@ import { BigNumber } from "@ethersproject/bignumber";
 import { formatEther } from "@ethersproject/units";
 import { useWeb3React } from "@web3-react/core";
 const { Content } = Layout;
-const { Title } = Typography;
+const { Link, Text } = Typography;
 
 const GET_donations = gql`
 	query donations($owner: Bytes) {
@@ -16,6 +16,7 @@ const GET_donations = gql`
 			token
 			timeStamp
 			from
+			hash
 			subscription {
 				name
 			}
@@ -59,9 +60,26 @@ function DonationsTimeline() {
 				{data.donations.map((record) => (
 					<Timeline.Item key={record.id}>
 						Received an amount of{" "}
-						{formatEther(BigNumber.from(record.donation)).toString()}{" "}
-						{record.token} on {timeConverter(record.timeStamp)} from{" "}
-						{record.from.toString()} in {record.subscription.name}
+						<Text type="success">
+							{formatEther(BigNumber.from(record.donation)).toString()}{" "}
+							{record.token}
+						</Text>{" "}
+						on {timeConverter(record.timeStamp)} from{" "}
+						<Link
+							href={
+								"https://rinkeby.etherscan.io/address/" + record.from.toString()
+							}
+							target="_blank"
+						>
+							{record.from.toString()}
+						</Link>{" "}
+						in <Text mark>{record.subscription.name}</Text>.{" "}
+						<Link
+							href={"https://rinkeby.etherscan.io/tx/" + record.hash.toString()}
+							target="_blank"
+						>
+							Hash
+						</Link>
 					</Timeline.Item>
 				))}
 				{/* <Timeline.Item>

@@ -241,18 +241,18 @@ function App() {
 									Dashboard
 								</Menu.Item>
 								<Menu.Item
-									key="2"
-									icon={<DatabaseOutlined />}
-									onClick={onItemClick}
-								>
-									Manage
-								</Menu.Item>
-								<Menu.Item
 									key="4"
 									icon={<UnorderedListOutlined />}
 									onClick={onItemClick}
 								>
 									Manage Accounts
+								</Menu.Item>
+								<Menu.Item
+									key="2"
+									icon={<DatabaseOutlined />}
+									onClick={onItemClick}
+								>
+									Manage Receivers
 								</Menu.Item>
 								<Menu.Item
 									key="3"

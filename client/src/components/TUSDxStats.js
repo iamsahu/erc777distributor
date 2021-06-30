@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Statistic, Card, Row, Col } from "antd";
-import { ArrowUpOutlined, ArrowDownOutlined } from "@ant-design/icons";
-import { gql, useQuery } from "@apollo/client";
+import { Statistic, Card } from "antd";
 
+import { gql, useQuery } from "@apollo/client";
+import { useWeb3React } from "@web3-react/core";
 import { BigNumber } from "@ethersproject/bignumber";
 import { formatEther } from "@ethersproject/units";
 const GET_DOGS = gql`
-	query GetDogs {
-		donations(where: { token: "fTUSDx" }) {
+	query GetDogs($owner: Bytes) {
+		donations(where: { token: "fTUSDx", owner: $owner }) {
 			id
 			token
 			index
@@ -17,7 +17,12 @@ const GET_DOGS = gql`
 `;
 
 function TUSDxStats() {
-	const { loading, error, data } = useQuery(GET_DOGS);
+	const web3React = useWeb3React();
+	const { loading, error, data } = useQuery(GET_DOGS, {
+		variables: {
+			owner: web3React.account,
+		},
+	});
 	const [val, setVal] = useState("0");
 
 	useEffect(() => {
@@ -44,7 +49,7 @@ function TUSDxStats() {
 			<Card>
 				<Statistic
 					title="Funds Received in TUSDx"
-					value={val}
+					value={web3React.active ? val : "Connect Wallet"}
 					// precision={2}
 					valueStyle={{ color: "#3f8600" }}
 					// prefix={<ArrowUpOutlined />}
