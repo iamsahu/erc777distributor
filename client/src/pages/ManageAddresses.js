@@ -69,22 +69,6 @@ function ManageAddresses() {
 
 	useEffect(() => {
 		if (!loading && data) {
-			// console.log(data);
-			// const totalShares = data.subscription2S[0].totalShares;
-			// var temp = [];
-			// for (let index = 0; index < data.receiveAddresses.length; index++) {
-			// 	let element = Object.assign({}, data.receiveAddresses[index]);
-			// 	// console.log(element);
-			// 	element["shares"] =
-			// 		(
-			// 			(parseInt(data.subscriberEntities[index]["shares"]) /
-			// 				parseInt(totalShares)) *
-			// 			100
-			// 		)
-			// 			.toFixed(2)
-			// 			.toString() + " %";
-			// 	temp.push(element);
-			// }
 			setdata(data.receiveAddresses);
 		}
 	}, [loading]);
@@ -142,33 +126,7 @@ function ManageAddresses() {
 			</Text>
 			<br />
 			<AddAddress />
-			<Table dataSource={dataPoints} columns={columns}>
-				{/* <Column title="Name" dataIndex="name" key="name" />
-				<Column
-					title="Address"
-					dataIndex="receiveAddress"
-					key="receiveAddress"
-				/>
-				<Column title="Created Time" dataIndex="timeStamp" key="timeStamp" />
-				{web3React.active && (
-					<Column
-						title="Action"
-						key="action"
-						render={(text, record) => {
-							// console.log(record);
-							return (
-								<Space size="middle">
-									<ModifyAddressName
-										address={record.receiveAddress}
-										owner={record.owner}
-										name={record.name}
-									/>
-								</Space>
-							);
-						}}
-					/>
-				)} */}
-			</Table>
+			<Table dataSource={dataPoints} columns={columns}></Table>
 		</Content>
 	);
 }

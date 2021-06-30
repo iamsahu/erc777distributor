@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useWeb3React } from "@web3-react/core";
 import { injected } from "./helpers/connector";
-import getWeb3 from "./getWeb3";
 import Web3 from "web3";
 import Dashboard from "./pages/Dashboard";
 import ManageSubscribers from "./pages/ManageSubscribers";
@@ -9,7 +8,6 @@ import TimeLine from "./pages/TimeLine";
 import Web3Context from "./context/Web3Context";
 import ManageAddresses from "./pages/ManageAddresses";
 import ERC777Distributor from "./contracts/ERC777Distributor.json";
-import ApproveSubscription from "./pages/ApproveSubscription";
 import "./App.css";
 
 import { Layout, Menu, Button } from "antd";
@@ -103,29 +101,6 @@ function App() {
 		});
 	}, [details.current.web3]);
 
-	// useEffect(() => {
-	// 	async function setup() {
-	// 		const web3 = await getWeb3();
-	// 		console.log("web3 found");
-	// 		details.current.web3 = web3;
-	// 		details.current.chainid = parseInt(await web3.eth.getChainId());
-	// 		setMetaMask("GotWeb3");
-	// 		await web3.eth.getAccounts((error, accounts) => {
-	// 			details.current.accounts = accounts;
-	// 			console.log(accounts);
-	// 			if (accounts.length > 0) {
-	// 				setMetaMask("Set");
-	// 				console.log("Set in accounts");
-	// 				web3React.activate(injected, onError, true).catch((err) => {
-	// 					console.error(err);
-	// 					debugger;
-	// 				});
-	// 			}
-	// 		});
-	// 	}
-	// 	setup();
-	// }, []);
-
 	//TO DO: Handling the following
 
 	function handleChainChanged(chainId) {
@@ -148,17 +123,6 @@ function App() {
 
 	async function ConnectWallet() {
 		activateWeb3();
-		// try {
-		// 	details.current.ethereum
-		// 		.request({ method: "eth_requestAccounts" })
-		// 		.then((accounts) => {
-		// 			details.current.accounts = accounts;
-		// 			setMetaMask("Set");
-		// 		})
-		// 		.catch((error) => console.log("Error"));
-		// } catch (error) {
-		// 	console.log(error);
-		// }
 	}
 
 	async function loadContract(contract) {
@@ -201,19 +165,6 @@ function App() {
 				break;
 		}
 	}
-	// async function GetBalance() {
-	// 	const advisory = await loadContract("dev", "AdvisoryToken");
-	// 	const val = await advisory.methods.totalSupply().call();
-	// 	console.log(details.current.web3.utils.fromWei(val));
-	// }
-
-	// async function MintExtra() {
-	// 	const advisory = await loadContract("dev", "AdvisoryToken");
-	// 	const val = await advisory.methods
-	// 		.mint()
-	// 		.send({ from: details.current.accounts[0], gasLimit: 210000 });
-	// 	console.log(val);
-	// }
 
 	return (
 		<Layout>
@@ -283,12 +234,6 @@ function App() {
 				</Web3Context.Provider>
 			</Content>
 		</Layout>
-		// <div>
-		// 	{!web3React.active && (
-		// 		<button onClick={ConnectWallet}>Connect Wallet!</button>
-		// 	)}
-		// 	{metaMask === "Set" && "Metamask is available"}
-		// </div>
 	);
 }
 
