@@ -25,13 +25,22 @@ module.exports = async function (deployer, network, accounts) {
 			await deployer.deploy(BaseDistributor).then(async function () {
 				await deployer.deploy(
 					DistributorFactory,
-					"0xeD5B5b32110c3Ded02a07c8b8e97513FAfb883B6", //Host
-					"0x32E0ecb72C1dDD92B007405F8102c1556624264D", //IDA
-					"0x745861AeD1EEe363b4AaA5F1994Be40b1e05Ff90", //DAI
-					"0x0F1D7C55A2B133E000eA10EeC03c774e0d6796e8", //USDC
-					"0xdF7B8461a1d9f57f12F88d97FC6131E36d302d81", //TUSD
-					"0xa623b2DD931C5162b7a0B25852f4024Db48bb1A0", //ETH
-					"0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24", //1820
+					//Kovan
+					"0xF0d7d1D47109bA426B9D8A3Cde1941327af1eea3", //Host
+					"0x556ba0b3296027Dd7BCEb603aE53dEc3Ac283d2b", //IDA
+					"0xe3cb950cb164a31c66e32c320a800d477019dcff", //"DAI"
+					"0x25b5cd2e6ebaedaa5e21d0ecf25a567ee9704aa7",
+					"0xb20200908d60f1d7bc68594f677bc15070a87504",
+					"0xdd5462a7db7856c9128bc77bd65c2919ee23c6e1", //ETHx
+					"0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24",
+					//Rinkeby
+					// "0xeD5B5b32110c3Ded02a07c8b8e97513FAfb883B6", //Host
+					// "0x32E0ecb72C1dDD92B007405F8102c1556624264D", //IDA
+					// "0x745861AeD1EEe363b4AaA5F1994Be40b1e05Ff90", //DAI
+					// "0x0F1D7C55A2B133E000eA10EeC03c774e0d6796e8", //USDC
+					// "0xdF7B8461a1d9f57f12F88d97FC6131E36d302d81", //TUSD
+					// "0xa623b2DD931C5162b7a0B25852f4024Db48bb1A0", //ETH
+					// "0x1820a4B7618BdE71Dce8cdc73aAB6C95905faD24", //1820
 					Emitter.address,
 					BaseDistributor.address
 				);
