@@ -11,6 +11,9 @@ function Dashboard() {
 			style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 		>
 			<Title> Dashboard</Title>
+			<Text>
+				You can see all the funds received in all the accounts on this page.
+			</Text>
 			<br />
 			<DashboardStatistics />
 			<DonationLineChart />

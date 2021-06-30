@@ -11,7 +11,7 @@ import { gql, useQuery } from "@apollo/client";
 import { client } from "../index";
 
 const { Content } = Layout;
-const { Title, Paragraph } = Typography;
+const { Text, Title, Paragraph } = Typography;
 
 const GET_RECEIVE_ADDRESS = gql`
 	query receiveAddresses($owner: Bytes) {
@@ -201,6 +201,10 @@ function ManageSubscribers() {
 				style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 			>
 				<Title>Manage Receivers</Title>
+				<Text>
+					You can use manage the addresses that receive a share of the funds
+					received in the selected account.
+				</Text>
 				Loading...
 			</Content>
 		);
@@ -212,6 +216,10 @@ function ManageSubscribers() {
 				style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 			>
 				<Title>Manage Receivers</Title>
+				<Text>
+					You can use manage the addresses that receive a share of the funds
+					received in the selected account.
+				</Text>
 				Please connect wallet!
 			</Content>
 		);
@@ -224,6 +232,10 @@ function ManageSubscribers() {
 				style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 			>
 				<Title>Manage Receivers</Title>
+				<Text>
+					You can use manage the addresses that receive a share of the funds
+					received in the selected account.
+				</Text>
 				Something went wrong!
 			</Content>
 		);
@@ -237,6 +249,11 @@ function ManageSubscribers() {
 				{" "}
 				Manage Receivers {projectName === null ? <></> : "for " + projectName}
 			</Title>{" "}
+			<Text>
+				You can use manage the addresses that receive a share of the funds
+				received in the selected account.
+			</Text>
+			<br />
 			{/* <Paragraph copyable>{selectedAddress}</Paragraph> */}
 			<Dropdown overlay={menu} trigger={["click"]}>
 				<a className="ant-dropdown-link" onClick={(e) => e.preventDefault()}>

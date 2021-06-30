@@ -95,6 +95,9 @@ function ManageAddresses() {
 				style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 			>
 				<Title> Manage Accounts</Title>
+				<Text>
+					You can use create multiple addresses (accounts) to receive funds.
+				</Text>
 				Loading...
 			</Content>
 		);
@@ -106,6 +109,9 @@ function ManageAddresses() {
 				style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 			>
 				<Title> Manage Accounts</Title>
+				<Text>
+					You can use create multiple addresses (accounts) to receive funds.
+				</Text>
 				Please connect wallet!
 			</Content>
 		);
@@ -118,6 +124,9 @@ function ManageAddresses() {
 				style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 			>
 				<Title> Manage Accounts</Title>
+				<Text>
+					You can use create multiple addresses (accounts) to receive funds.
+				</Text>
 				Something went wrong!
 			</Content>
 		);
@@ -128,6 +137,10 @@ function ManageAddresses() {
 			style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 		>
 			<Title> Manage Accounts</Title>
+			<Text>
+				You can use create multiple addresses (accounts) to receive funds.
+			</Text>
+			<br />
 			<AddAddress />
 			<Table dataSource={dataPoints} columns={columns}>
 				{/* <Column title="Name" dataIndex="name" key="name" />
