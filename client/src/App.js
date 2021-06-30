@@ -9,6 +9,7 @@ import TimeLine from "./pages/TimeLine";
 import Web3Context from "./context/Web3Context";
 import ManageAddresses from "./pages/ManageAddresses";
 import ERC777Distributor from "./contracts/ERC777Distributor.json";
+import ApproveSubscription from "./pages/ApproveSubscription";
 import "./App.css";
 
 import { Layout, Menu, Button } from "antd";

@@ -69,18 +69,18 @@ const columns = [
 					<ModifySubscriber
 						userAddress={record.subscriberAddress}
 						currentShare={record.shares}
-						selectedAddress={record.publisher}
+						selectedAddress={record.receiveAddress.receiveAddress}
 					/>
 					<ModifyReceiverName
 						userAddress={record.subscriberAddress}
 						index={record.index}
-						publisher={record.publisher}
-						owner={record.owner}
+						publisher={record.receiveAddress.receiveAddress}
+						owner={record.receiveAddress.owner}
 						name={record.name}
 					/>
 					<RemoveSubscriber
 						userAddress={record.subscriberAddress}
-						selectedAddress={record.publisher}
+						selectedAddress={record.receiveAddress.receiveAddress}
 					/>
 				</Space>
 			);
@@ -90,7 +90,7 @@ const columns = [
 
 const GET_DOGS = gql`
 	query subscriberEntities($publisher: Bytes) {
-		subscriberEntities(where: { publisher: $publisher, shares_gt: 0 }) {
+		subscriberEntities(where: { shares_gt: 0, publisher: $publisher }) {
 			id
 			subscriberAddress
 			index
@@ -99,11 +99,12 @@ const GET_DOGS = gql`
 			shares
 			totalShares
 			name
-			owner
-		}
-		subscription2S(where: { publisher: $publisher }) {
-			id
-			totalShares
+			receiveAddress {
+				receiveAddress
+				owner
+				name
+				totalShares
+			}
 		}
 	}
 `;
@@ -140,11 +141,11 @@ function ManageSubscribers() {
 				},
 			})
 			.then((response) => {
-				// console.log(response.data);
+				console.log(response.data);
 				if (response.data !== undefined) {
 					let totalShares = 0;
-					if (response.data.subscription2S.length > 0)
-						totalShares = response.data.subscription2S[0].totalShares;
+					// if (response.data.subscription2S.length > 0)
+					// 	totalShares = response.data.subscription2S[0].totalShares;
 					var temp = [];
 					for (
 						let index = 0;
@@ -159,7 +160,11 @@ function ManageSubscribers() {
 						element["shares"] =
 							(
 								(parseInt(response.data.subscriberEntities[index]["shares"]) /
-									parseInt(totalShares)) *
+									parseInt(
+										response.data.subscriberEntities[index]["receiveAddress"][
+											"totalShares"
+										]
+									)) *
 								100
 							)
 								.toFixed(2)

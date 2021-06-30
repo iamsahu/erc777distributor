@@ -16,7 +16,6 @@ const GET_donations = gql`
 			token
 			timeStamp
 			from
-			publisher
 			subscription {
 				name
 			}
