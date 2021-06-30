@@ -54,9 +54,9 @@ function DonationsTimeline() {
 			style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 		>
 			<Timeline>
-				<Timeline.Item>
-					Created the fund receiving contract on 10/10/2021
-				</Timeline.Item>
+				{/* <Timeline.Item color="green">
+					Created the fund receiving contract on 20 Jun 2021
+				</Timeline.Item> */}
 				{data.donations.map((record) => (
 					<Timeline.Item key={record.id}>
 						Received an amount of{" "}

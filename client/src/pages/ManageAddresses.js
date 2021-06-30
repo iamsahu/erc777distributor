@@ -90,12 +90,37 @@ function ManageAddresses() {
 	}, [loading]);
 
 	if (loading) {
-		return <div>Loading</div>;
+		return (
+			<Content
+				style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
+			>
+				<Title> Manage Accounts</Title>
+				Loading...
+			</Content>
+		);
+	}
+
+	if (!web3React.active) {
+		return (
+			<Content
+				style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
+			>
+				<Title> Manage Accounts</Title>
+				Please connect wallet!
+			</Content>
+		);
 	}
 
 	if (error) {
 		console.log(error.message);
-		return <div>Something went wrong</div>;
+		return (
+			<Content
+				style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
+			>
+				<Title> Manage Accounts</Title>
+				Something went wrong!
+			</Content>
+		);
 	}
 	// return <div>Data</div>;
 	return (
