@@ -265,6 +265,7 @@ function ManageSubscribers() {
 			) : (
 				<></>
 			)}
+			<br />
 			<Table
 				dataSource={dataPoints}
 				columns={web3React.active ? columns : columns}

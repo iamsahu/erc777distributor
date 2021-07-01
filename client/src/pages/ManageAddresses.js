@@ -233,6 +233,7 @@ function ManageAddresses() {
 			</Text>
 			<br />
 			<AddAddress />
+			<br />
 			<Table dataSource={dataPoints} columns={columns}></Table>
 		</Content>
 	);
