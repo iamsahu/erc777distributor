@@ -17,7 +17,9 @@ A project that enables users to easily create smart addresses which receive ERC7
     - Fund disbursement
 - Individual level fund disbursement tracking
 - Pause logic
+- Improving the precision for the percentage calculation
 
 ## Other Repositories
-https://github.com/iamsahu/ida
-https://github.com/iamsahu/erc777approver
+- https://github.com/iamsahu/ida
+- https://github.com/iamsahu/distriemitter
+- https://github.com/iamsahu/erc777approver
