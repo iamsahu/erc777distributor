@@ -47,7 +47,7 @@ function DAIxStats() {
 		<div className="site-statistic-demo-card">
 			<Card>
 				<Statistic
-					title="Funds Received in DAIx"
+					title="DAIx tokens received"
 					value={web3React.active ? val : "Connect Wallet"}
 					// precision={2}
 					valueStyle={{ color: "#3f8600" }}

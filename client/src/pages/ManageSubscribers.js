@@ -201,10 +201,6 @@ function ManageSubscribers() {
 				style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 			>
 				<Title>Manage Receivers</Title>
-				<Text>
-					You can use manage the addresses that receive a share of the funds
-					received in the selected account.
-				</Text>
 				Loading...
 			</Content>
 		);
@@ -228,10 +224,6 @@ function ManageSubscribers() {
 				style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 			>
 				<Title>Manage Receivers</Title>
-				<Text>
-					You can use manage the addresses that receive a share of the funds
-					received in the selected account.
-				</Text>
 				Something went wrong!
 			</Content>
 		);
@@ -246,10 +238,10 @@ function ManageSubscribers() {
 				Manage Receivers {projectName === null ? <></> : "for " + projectName}
 			</Title>{" "}
 			<Text>
-				You can use manage the addresses that receive a share of the funds
-				received in the selected account. Please note that it might take a
-				couple of minutes for a newly added receiver to be reflected in the UI.
-				You will have to refresh.
+				You can manage the addresses that receive a share of the tokens received
+				in the selected account. Please note that it might take a couple of
+				minutes for a newly added receiver to be reflected in the UI. You will
+				have to refresh.
 			</Text>
 			<br />
 			{/* <Paragraph copyable>{selectedAddress}</Paragraph> */}

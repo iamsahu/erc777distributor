@@ -221,7 +221,7 @@ function App() {
 								</div>
 							</Content>
 							<Footer style={{ textAlign: "center" }}>
-								ERC777 Funds Distributor ©2021 Created by{" "}
+								ERC777 Tokens Distributor ©2021 Created by{" "}
 								<Link href="https://twitter.com/themystery" target="_blank">
 									Prafful Sahu
 								</Link>

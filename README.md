@@ -34,6 +34,7 @@ We have used clone factory pattern to minimize the cost of creation of a new acc
 - Individual level fund disbursement tracking
 - Pause logic
 - Improving the precision for the percentage calculation
+- Ability to add more ERC777 tokens
 - Mobile compatibility
 
 ## Other Repositories
@@ -41,12 +42,10 @@ We have used clone factory pattern to minimize the cost of creation of a new acc
 - Subgraph for ERC777 distributor events: https://github.com/iamsahu/distriemitter
 - Approver application for receivers to easily approve subscription: https://github.com/iamsahu/erc777approver
 
+## Sample Costs (In ETH subject to gas price)
 
-## Sample Costs (In ETH)
-
-BaseDistributor: 0.07700764
-Emitter: 0.01705986 
-Factory: 0.0246285
-
-Clone Account: 0.000768679
-Depositing & distributing funds: 0.000316424
+- BaseDistributor: 0.07700764
+- Emitter: 0.01705986 
+- Factory: 0.0246285
+- Account creation: 0.000768679
+- Depositing & distributing funds: 0.000316424

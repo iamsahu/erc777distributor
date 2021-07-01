@@ -48,7 +48,7 @@ function TUSDxStats() {
 		<div className="site-statistic-demo-card">
 			<Card>
 				<Statistic
-					title="Funds Received in TUSDx"
+					title="TUSDx tokens received"
 					value={web3React.active ? val : "Connect Wallet"}
 					// precision={2}
 					valueStyle={{ color: "#3f8600" }}

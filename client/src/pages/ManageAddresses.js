@@ -59,7 +59,7 @@ const columns = [
 		render: (text) => <>{timeConverter(text)}</>,
 	},
 	{
-		title: "Funds Received",
+		title: "Tokens Received",
 		key: "donation",
 		render: (text, record) => {
 			// console.log(record);
@@ -95,7 +95,7 @@ const columns = [
 					</Space>
 				);
 			} else {
-				return <Space size="middle">No funds received</Space>;
+				return <Space size="middle">No tokens received</Space>;
 			}
 			return (
 				<Space size="middle">
@@ -109,7 +109,7 @@ const columns = [
 		},
 	},
 	{
-		title: "Funds Disbursed",
+		title: "Tokens Disbursed",
 		key: "distributions",
 		render: (text, record) => {
 			// console.log(record);
@@ -144,7 +144,7 @@ const columns = [
 					</Space>
 				);
 			} else {
-				return <Space size="middle">No funds to disburse</Space>;
+				return <Space size="middle">No tokens to disburse</Space>;
 			}
 			return (
 				<Space size="middle">
@@ -195,11 +195,6 @@ function ManageAddresses() {
 				style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 			>
 				<Title> Manage Accounts</Title>
-				<Text>
-					You can use create multiple addresses (accounts) to receive funds.
-					Please note that it might take a couple of minutes for a newly created
-					account to be reflected in the UI.
-				</Text>
 				Loading...
 			</Content>
 		);
@@ -223,11 +218,6 @@ function ManageAddresses() {
 				style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 			>
 				<Title> Manage Accounts</Title>
-				<Text>
-					You can use create multiple addresses (accounts) to receive funds.
-					Please note that it might take a couple of minutes for a newly created
-					account to be reflected in the UI.
-				</Text>
 				Something went wrong!
 			</Content>
 		);
@@ -239,7 +229,7 @@ function ManageAddresses() {
 		>
 			<Title> Manage Accounts</Title>
 			<Text>
-				You can use create multiple addresses (accounts) to receive funds.
+				You can use create multiple addresses (accounts) to receive tokens.
 				Please note that it might take a couple of minutes for a newly created
 				account to be reflected in the UI. You will have to refresh.
 			</Text>
