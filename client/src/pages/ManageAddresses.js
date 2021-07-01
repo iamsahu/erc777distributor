@@ -79,6 +79,7 @@ const columns = [
 				}
 
 				let temp = [];
+
 				for (const key in value) {
 					if (Object.hasOwnProperty.call(value, key)) {
 						temp.push(
@@ -88,7 +89,11 @@ const columns = [
 						);
 					}
 				}
-				return temp;
+				return (
+					<Space size="small" direction="vertical">
+						{temp}
+					</Space>
+				);
 			} else {
 				return <Space size="middle">No funds received</Space>;
 			}
@@ -133,7 +138,11 @@ const columns = [
 						);
 					}
 				}
-				return temp;
+				return (
+					<Space size="small" direction="vertical">
+						{temp}
+					</Space>
+				);
 			} else {
 				return <Space size="middle">No funds to disburse</Space>;
 			}
@@ -188,6 +197,8 @@ function ManageAddresses() {
 				<Title> Manage Accounts</Title>
 				<Text>
 					You can use create multiple addresses (accounts) to receive funds.
+					Please note that it might take a couple of minutes for a newly created
+					account to be reflected in the UI.
 				</Text>
 				Loading...
 			</Content>
@@ -200,9 +211,6 @@ function ManageAddresses() {
 				style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
 			>
 				<Title> Manage Accounts</Title>
-				<Text>
-					You can use create multiple addresses (accounts) to receive funds.
-				</Text>
 				Please connect wallet!
 			</Content>
 		);
@@ -217,6 +225,8 @@ function ManageAddresses() {
 				<Title> Manage Accounts</Title>
 				<Text>
 					You can use create multiple addresses (accounts) to receive funds.
+					Please note that it might take a couple of minutes for a newly created
+					account to be reflected in the UI.
 				</Text>
 				Something went wrong!
 			</Content>
@@ -230,6 +240,8 @@ function ManageAddresses() {
 			<Title> Manage Accounts</Title>
 			<Text>
 				You can use create multiple addresses (accounts) to receive funds.
+				Please note that it might take a couple of minutes for a newly created
+				account to be reflected in the UI. You will have to refresh.
 			</Text>
 			<br />
 			<AddAddress />

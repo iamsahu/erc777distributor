@@ -24,6 +24,7 @@ We have used clone factory pattern to minimize the cost of creation of a new acc
     - A fixed transaction fee
 
 ## Future Roadmap
+- Catching the events from emitter to update the data.
 - Public links of accounts displaying all the details
 - Matic & Mainnet Deployment
 - Timeline showing
@@ -39,3 +40,13 @@ We have used clone factory pattern to minimize the cost of creation of a new acc
 - Subgraph for IDA: https://github.com/iamsahu/ida
 - Subgraph for ERC777 distributor events: https://github.com/iamsahu/distriemitter
 - Approver application for receivers to easily approve subscription: https://github.com/iamsahu/erc777approver
+
+
+## Sample Costs (In ETH)
+
+BaseDistributor: 0.07700764
+Emitter: 0.01705986 
+Factory: 0.0246285
+
+Clone Account: 0.000768679
+Depositing & distributing funds: 0.000316424

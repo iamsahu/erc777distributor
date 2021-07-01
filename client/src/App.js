@@ -216,10 +216,7 @@ function App() {
 						</Sider>
 						<Layout className="site-layout">
 							<Content>
-								<div
-									className="site-layout-background"
-									style={{ padding: 24, minHeight: 360 }}
-								>
+								<div className="site-layout-background" style={{ padding: 12 }}>
 									{currentUI}
 								</div>
 							</Content>

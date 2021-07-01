@@ -1,14 +1,13 @@
 import React from "react";
 import { Card, Typography, Layout, Divider } from "antd";
 import DashboardStatistics from "../components/DashboardStatistics";
-import DonationLineChart from "../components/DonationLineChart";
 const { Content } = Layout;
 const { Text, Title, Paragraph } = Typography;
 
 function Dashboard() {
 	return (
 		<Content
-			style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
+			style={{ padding: "20px 20px", background: "#fff", minHeight: "80vh" }}
 		>
 			<Card>
 				<Title level={3}>What is ERC777 distributor?</Title>
@@ -18,8 +17,8 @@ function Dashboard() {
 					distribute funds to any number of receivers at a fixed cost. The
 					application allows you to create multiple accounts in which you could
 					receive funds and add multiple receivers to those accounts. The
-					receivers will receive funds automatically from the accounts in which
-					they are added in proportion to the shares they were allocated.
+					receivers will receive funds automatically from the accounts in
+					proportion to the shares they were allocated in that account.
 				</Paragraph>
 				<Paragraph>
 					You can use this to collect & disburse funds for donations, projects,
