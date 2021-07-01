@@ -26,8 +26,10 @@ function Dashboard() {
 					royalty distribution, etc.
 				</Paragraph>
 				<Text type="warning">
-					Please note for now we only support DAIx, USDCx, TUSDx & ETHx
-				</Text>
+					Please note for now we only support DAIx, USDCx, TUSDx & ETHx. And
+					only
+				</Text>{" "}
+				<Text type="danger">RINKEBY NETWORK.</Text>
 			</Card>
 			<Divider />
 			<Title> Dashboard</Title>
