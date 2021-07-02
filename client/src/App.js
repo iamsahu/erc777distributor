@@ -10,14 +10,13 @@ import ManageAddresses from "./pages/ManageAddresses";
 import ERC777Distributor from "./contracts/ERC777Distributor.json";
 import "./App.css";
 
-import { Layout, Menu, Button } from "antd";
+import { Layout, Menu, Button, Tag, Typography } from "antd";
 import {
 	AreaChartOutlined,
 	DatabaseOutlined,
 	FieldTimeOutlined,
 	UnorderedListOutlined,
 } from "@ant-design/icons";
-import { Typography } from "antd";
 
 const { Link, Title } = Typography;
 const { Header, Content, Footer, Sider } = Layout;
@@ -165,18 +164,28 @@ function App() {
 				break;
 		}
 	}
-
+	// console.log(web3React.account);
 	return (
 		<Layout>
 			<Header
 				className="header"
 				style={{ position: "fixed", zIndex: 1, width: "100%" }}
 			>
-				{metaMask !== "Set" && (
-					<Button type="primary" onClick={ConnectWallet}>
-						Connect Wallet
-					</Button>
-				)}
+				<div
+					style={{
+						float: "right",
+
+						// margin: "16px 24px 16px 0",
+					}}
+				>
+					{web3React.account !== undefined ? (
+						<Tag color="blue">{web3React.account}</Tag>
+					) : (
+						<Button type="primary" onClick={ConnectWallet}>
+							Connect Wallet
+						</Button>
+					)}
+				</div>
 			</Header>
 			<Content className="site-layout" style={{ marginTop: 64 }}>
 				<Web3Context.Provider value={details}>

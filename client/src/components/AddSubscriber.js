@@ -43,20 +43,6 @@ function AddSubscriber(props) {
 		setVisible(true);
 	};
 
-	// useEffect(() => {
-	//     const contract = new Contract(ERC777Distributor.networks[web3React.chainId].address,ERC777Distributor.abi, web3React.library.getSigner())
-	//     return () => {
-	//         cleanup
-	//     }
-	// }, [input])
-
-	// const networkId = details.current.networkId;
-	// // const cc = ERC777Distributor.networks[networkId];
-	// const local1nstance = new web3.eth.Contract(
-	// 	ERC777Distributor.abi,
-	// 	"0x4078d8dC99c90Ac5c5D7A233d01f250CDCFA54A0"
-	// );
-
 	const onOk = () => {
 		setConfirmLoading(true);
 		form.submit();
@@ -88,17 +74,6 @@ function AddSubscriber(props) {
 					console.log(error.message);
 					openFailNotification();
 				});
-
-		// .on("confirmation", function (confirmationNumber, receipt) {
-		// 	console.log(confirmationNumber);
-		// 	console.log(receipt);
-		// 	setVisible(false);
-		// 	setConfirmLoading(false);
-		// })
-		// .on("error", function (error, receipt) {
-		// 	// If the transaction was rejected by the network with a receipt, the second parameter will be the receipt.
-		// 	console.log(error);
-		// });
 	}
 
 	const onFinish = async (values) => {
@@ -144,7 +119,7 @@ function AddSubscriber(props) {
 								label="Share %"
 								rules={[{ required: true }]}
 							>
-								<InputNumber />
+								<InputNumber min={1} max={100} />
 							</Form.Item>
 						</Form>
 					</Modal>

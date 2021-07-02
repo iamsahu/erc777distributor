@@ -302,6 +302,7 @@ contract BaseDistributor is IERC777Recipient,Initializable {
     function addUser(address newUser,uint128 sharePercentage,string memory _name) external onlyOwner{
         require(shareMapping[newUser]==0,"User already exists");
         require(sharePercentage>0,"Share Percentage should be greater than zero");
+        require(sharePercentage<=100,"Share Percentage should be less than 100");
 
         uint128 shareUnits = totalShareUnits==0?100: (sharePercentage * totalShareUnits)/(100- sharePercentage);
         modifySub(newUser, shareUnits);
@@ -314,6 +315,7 @@ contract BaseDistributor is IERC777Recipient,Initializable {
     function modifyUser(address existingUser,uint128 sharePercentage) external onlyOwner{
         require(shareMapping[existingUser]!=0,"User doesn't exist");
         require(sharePercentage>0,"Share Percentage should be greater than zero");
+        require(sharePercentage<=100,"Share Percentage should be less than 100");
         uint128 shareUnits = totalShareUnits==shareMapping[existingUser]?100:(sharePercentage * abs(totalShareUnits,shareMapping[existingUser]))/(100- sharePercentage);
         modifySub(existingUser, shareUnits);
         totalShareUnits -= shareMapping[existingUser];//Need to handle case where shareMapping is larger than total share units

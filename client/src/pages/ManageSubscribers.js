@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Typography, Layout, Menu, Dropdown } from "antd";
+import { Typography, Layout, Menu, Dropdown, Modal, Button } from "antd";
 import { Table, Space } from "antd";
 import { DownOutlined } from "@ant-design/icons";
 import AddSubscriber from "../components/AddSubscriber";
@@ -11,7 +11,7 @@ import { gql, useQuery } from "@apollo/client";
 import { client } from "../index";
 
 const { Content } = Layout;
-const { Text, Title, Paragraph } = Typography;
+const { Text, Title, Paragraph, Link } = Typography;
 
 const GET_RECEIVE_ADDRESS = gql`
 	query receiveAddresses($owner: Bytes) {
@@ -54,7 +54,7 @@ const columns = [
 		render: (text) => <Paragraph copyable>{text}</Paragraph>,
 	},
 	{
-		title: "Shares",
+		title: "Share %",
 		dataIndex: "shares",
 		key: "shares",
 		render: (text) => <>{text}</>,
@@ -229,6 +229,28 @@ function ManageSubscribers() {
 		);
 	}
 
+	function info() {
+		Modal.info({
+			title: "What is a share?",
+			content: (
+				<div>
+					<p>
+						Share is used to calculate the amount a receiver would receive out
+						of the total amount received by an address. The share value is out
+						of 100.
+					</p>
+					<p>
+						The calculation for shares happen the same it happens for equity.
+						When a new receiver is brought on board the existing receivers lose
+						proportionate amount of shares to provide the new receiver the new
+						share amount.
+					</p>
+				</div>
+			),
+			onOk() {},
+		});
+	}
+
 	return (
 		<Content
 			style={{ padding: "20px 20px", background: "#fff", minHeight: "83vh" }}
@@ -238,10 +260,10 @@ function ManageSubscribers() {
 				Manage Receivers {projectName === null ? <></> : "for " + projectName}
 			</Title>{" "}
 			<Text>
-				You can manage the addresses that receive a share of the tokens received
-				in the selected account. Please note that it might take a couple of
-				minutes for a newly added receiver to be reflected in the UI. You will
-				have to refresh.
+				You can manage the addresses that receive a{" "}
+				<Link onClick={info}>share</Link> of the tokens received in the selected
+				account. Please note that it might take a couple of minutes for a newly
+				added receiver to be reflected in the UI. You will have to refresh.
 			</Text>
 			<br />
 			{/* <Paragraph copyable>{selectedAddress}</Paragraph> */}
