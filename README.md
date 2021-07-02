@@ -36,6 +36,7 @@ We have used clone factory pattern to minimize the cost of creation of a new acc
 - Improving the precision for the percentage calculation
 - Ability to add more ERC777 tokens
 - Mobile compatibility
+- Prevent addition of the account as a receiver in itself in the main UI itself. Right now it is prevented in the smart contract
 
 ## Other Repositories
 - Subgraph for IDA: https://github.com/iamsahu/ida
